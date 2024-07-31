@@ -5,7 +5,7 @@
 | No | Title      | Method   | URL                     | 
 |----|------------|----------|-------------------------|
 | 1  | 채용공고 등록    | `POST`   | `/api/jobs`             | 
-| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:id`         |   
+| 2  | 채용공고 수정    | `PUT`    | `/api/jobs/:id`         |   
 | 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:id`         |    
 | 4  | 채용공고 목록 조회 | `GET`    | `/api/jobs`             |    
 | 5  | 채용공고 검색    | `GET`    | `/api/jobs?serch={검색어}` |    
@@ -14,10 +14,11 @@
 
 ### 1. 채용공고 등록
 
+회사는 아래 데이터와 같이 채용공고를 등록합니다.
 
-#### Method
+#### URL
 ```
-POST /jobs
+POST /api/jobs
 ```
 
 #### Request Body
@@ -76,6 +77,87 @@ POST /jobs
     "message": {
       "reward": "보상금은 0이상의 숫자여야 합니다.",
       "companyId": "회사 아이디는 필수 요소입니다." or "회사 아이디는 1이상의 숫자여야 합니다.",
+      "position": "포지션은 필수 요소입니다."
+    },
+    "httpStatus": "BAD_REQUEST"
+  }
+}
+```
+
+### 2. 채용공고 수정
+
+회사는 아래 데이터와 같이 채용공고를 수정합니다.
+(회사 id 이외 모두 수정 가능합니다.)
+
+#### URL
+```
+PUT /api/jobs/:id
+```
+
+#### Request Body
+```json
+{
+    "position": "백엔드 주니어 개발자",
+    "reward": 1500000, # 변경됨
+    "detail": "원티드랩에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은..", # 변경됨
+    "skill": "Python"
+}
+```
+or
+```json
+{
+    "position": "백엔드 주니어 개발자",
+    "reward": 1000000,
+    "detail": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+    "skill": "Django" # 변경됨
+}
+```
+
+#### Success Response
+
+- Status Code : 200
+```json
+{
+    "success": true,
+    "response": {
+        "id": 1,
+        "companyId": 1,
+        "position": "백엔드 주니어 개발자",
+        "reward": 1500000,
+        "detail": "원티드랩에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은..",
+        "skill": "Python",
+        "createdAt": "2024-07-31 13:04:01",
+        "updatedAt": "2024-07-31 19:05:36",
+        "deletedAt": null
+    },
+    "error": null
+}
+```
+
+#### Fail Response
+
+1. 존재하지 않은 채용공고 아이디일 경우 
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "0번 채용공고가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
+}
+```
+
+2. 유효하지 않은 필드값일 경우
+- Status Code : 400
+```json
+{
+  "success": false,
+  "response": null,
+  "error": {
+    "message": {
+      "reward": "보상금은 0이상의 숫자여야 합니다.",
       "position": "포지션은 필수 요소입니다."
     },
     "httpStatus": "BAD_REQUEST"
