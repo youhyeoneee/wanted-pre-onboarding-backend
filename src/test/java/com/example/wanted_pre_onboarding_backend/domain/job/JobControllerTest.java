@@ -3,6 +3,8 @@ package com.example.wanted_pre_onboarding_backend.domain.job;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(JobController.class)
@@ -30,6 +34,7 @@ class JobControllerTest {
 	private ObjectMapper objectMapper;
 
 	private RegisterJobRequestDto registerJobRequestDto;
+	private UpdateJobRequestDto updateJobRequestDto;
 
 	@BeforeEach
 	void setUp() {
@@ -39,6 +44,14 @@ class JobControllerTest {
 		registerJobRequestDto.setReward(1000000);
 		registerJobRequestDto.setDetail("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
 		registerJobRequestDto.setSkill("Python");
+
+
+		updateJobRequestDto = new UpdateJobRequestDto(
+			"백엔드 주니어 개발자",
+			1500000,
+			"원티드랩에서 백엔드 주니어 개발자를 \"적극\" 채용합니다. 자격요건은..",
+			"Python"
+		);
 	}
 
 	@Test
@@ -48,7 +61,7 @@ class JobControllerTest {
 		Job savedJob = registerJobRequestDto.toEntity();
 		when(jobService.saveJob(any(RegisterJobRequestDto.class))).thenReturn(savedJob);
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
@@ -64,7 +77,7 @@ class JobControllerTest {
 		String invalidJson = "{ \"companyId\": 1, \"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(invalidJson))
@@ -79,7 +92,7 @@ class JobControllerTest {
 		// given
 		registerJobRequestDto.setReward(-1);
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
@@ -96,7 +109,7 @@ class JobControllerTest {
 		String invalidJson = "{ \"companyId\": \"abc\", \"position\": \"백엔드 주니어 개발자\", \"reward\": 1000000, \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(invalidJson))
@@ -109,7 +122,7 @@ class JobControllerTest {
 		// given
 		registerJobRequestDto.setCompanyId(0);
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
@@ -126,7 +139,7 @@ class JobControllerTest {
 		String invalidJson = "{ \"companyId\": \"\", \"position\": \"백엔드 주니어 개발자\", \"reward\": 1000000, \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(invalidJson))
@@ -142,7 +155,7 @@ class JobControllerTest {
 		// given
 		when(jobService.saveJob(any(RegisterJobRequestDto.class))).thenThrow(CompanyNotFoundException.class);
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
@@ -158,7 +171,7 @@ class JobControllerTest {
 		// given
 		registerJobRequestDto.setPosition("");
 
-		// when
+		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
@@ -167,4 +180,110 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.error.message.position").value("포지션은 필수 요소입니다."))
 			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
 	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 성공")
+	void updateJobSuccess() throws Exception {
+		// given
+		int jobId = 1;
+		Job updatedJob = new Job(1,
+			updateJobRequestDto.getPosition(),
+			updateJobRequestDto.getReward(),
+			updateJobRequestDto.getDetail(),
+			updateJobRequestDto.getSkill());
+
+		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenReturn(updatedJob);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response.position").value(updateJobRequestDto.getPosition()))
+			.andExpect(jsonPath("$.response.reward").value(updateJobRequestDto.getReward()))
+			.andExpect(jsonPath("$.response.detail").value(updateJobRequestDto.getDetail()))
+			.andExpect(jsonPath("$.response.skill").value(updateJobRequestDto.getSkill()));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 채용공고 아이디에 문자 입력")
+	void updateJobFailByJobId() throws Exception {
+		// given
+		String jobId = "aaa";
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
+	void updateJobFailByJobId2() throws Exception {
+		// given
+		int jobId = 0;
+		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(new JobNotFoundException(jobId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 문자 입력")
+	void updateJobFailByReward1() throws Exception {
+		// given
+		String invalidJson = "{\"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
+			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(invalidJson))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 0미만의 숫자 입력")
+	void updateJobFailByReward2() throws Exception {
+		// given
+		updateJobRequestDto.setReward(-1);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message.reward").value("보상금은 0이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 포지션 필드에 빈 문자열 입력")
+	void updateJobFaulureByPosition() throws Exception {
+		// given
+		updateJobRequestDto.setPosition("");
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message.position").value("포지션은 필수 요소입니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+	}
 }
+
