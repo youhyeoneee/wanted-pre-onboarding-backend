@@ -24,6 +24,7 @@ public class JobController {
     private JobService jobService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiUtils.ApiResult registerJob(@Valid @RequestBody RegisterJobRequestDto jobRequestDto) {
         int companyId = jobRequestDto.getCompanyId();
         if (companyService.existsByCompanyId(companyId)) {
