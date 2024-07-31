@@ -7,9 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class RegisterJobRequestDto {
     @NotNull(message = "회사 아이디는 필수 요소입니다.")
