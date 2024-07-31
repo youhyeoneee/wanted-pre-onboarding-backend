@@ -2,6 +2,7 @@ package com.example.wanted_pre_onboarding_backend.domain.job;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyService;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class JobController {
             Job savedJob = jobService.saveJob(jobRequestDto);
             return success(savedJob);
         } else {
-            return error("채용공고 등록 실패 - 회사가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+            throw new CompanyNotFoundException("채용공고 등록 실패");
         }
     }
 }
