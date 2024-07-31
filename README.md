@@ -5,7 +5,7 @@
 | No | Title      | Method   | URL                     | 
 |----|------------|----------|-------------------------|
 | 1  | 채용공고 등록    | `POST`   | `/api/jobs`             | 
-| 2  | 채용공고 수정    | `PUT`    | `/api/jobs/:id`         |   
+| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:id`         |   
 | 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:id`         |    
 | 4  | 채용공고 목록 조회 | `GET`    | `/api/jobs`             |    
 | 5  | 채용공고 검색    | `GET`    | `/api/jobs?serch={검색어}` |    
@@ -91,7 +91,7 @@ POST /api/jobs
 
 #### URL
 ```
-PUT /api/jobs/:id
+PATCH /api/jobs/:id
 ```
 
 #### Request Body

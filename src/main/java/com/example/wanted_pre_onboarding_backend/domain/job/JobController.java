@@ -27,7 +27,7 @@ public class JobController {
         return success(savedJob);
     }
 
-    @PutMapping("/{jobId}")
+    @PatchMapping("/{jobId}")
     public ApiUtils.ApiResult updateJob(@PathVariable Integer jobId, @Valid @RequestBody UpdateJobRequestDto jobRequestDto) {
         Job updatedJob = jobService.updateJob(jobId, jobRequestDto);
         return success(updatedJob);

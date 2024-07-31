@@ -3,6 +3,8 @@ package com.example.wanted_pre_onboarding_backend.domain.job;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -190,11 +192,10 @@ class JobControllerTest {
 			updateJobRequestDto.getDetail(),
 			updateJobRequestDto.getSkill());
 
-		when(jobService.updateJob(jobId, updateJobRequestDto)).thenReturn(updatedJob);
-
+		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenReturn(updatedJob);
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/" + jobId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isOk())
@@ -212,7 +213,7 @@ class JobControllerTest {
 		String jobId = "aaa";
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/" + jobId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isBadRequest())
@@ -228,7 +229,7 @@ class JobControllerTest {
 		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(new JobNotFoundException(jobId));
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/" + jobId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isNotFound())
@@ -245,7 +246,7 @@ class JobControllerTest {
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/1")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(invalidJson))
 			.andExpect(status().isBadRequest())
@@ -260,7 +261,7 @@ class JobControllerTest {
 		updateJobRequestDto.setReward(-1);
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/1")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isBadRequest())
@@ -276,7 +277,7 @@ class JobControllerTest {
 		updateJobRequestDto.setPosition("");
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/jobs/1")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isBadRequest())
