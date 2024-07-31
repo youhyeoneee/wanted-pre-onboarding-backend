@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
@@ -42,14 +43,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiUtils.ApiResult<String> handleHttpException(HttpMessageNotReadableException e) {
-        String errorMessage = e.getMessage();
+        String errorMessage = "잘못된 입력 형식입니다 : " + e.getLocalizedMessage();
         return error(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({CompanyNotFoundException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiUtils.ApiResult<String> handleBadRequestException(RuntimeException e) {
         String errorMessage = e.getMessage();
-        return error(errorMessage, HttpStatus.BAD_REQUEST);
+        return error(errorMessage, HttpStatus.NOT_FOUND);
     }
 }
