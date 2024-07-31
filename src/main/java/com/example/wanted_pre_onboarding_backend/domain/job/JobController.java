@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,11 @@ public class JobController {
     public ApiUtils.ApiResult registerJob(@Valid @RequestBody RegisterJobRequestDto jobRequestDto) {
         Job savedJob = jobService.saveJob(jobRequestDto);
         return success(savedJob);
+    }
+
+    @PutMapping("/{jobId}")
+    public ApiUtils.ApiResult updateJob(@PathVariable Integer jobId, @Valid @RequestBody UpdateJobRequestDto jobRequestDto) {
+        Job updatedJob = jobService.updateJob(jobId, jobRequestDto);
+        return success(updatedJob);
     }
 }

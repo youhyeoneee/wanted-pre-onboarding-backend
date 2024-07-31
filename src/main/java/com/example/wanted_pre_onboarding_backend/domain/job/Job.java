@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
 
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -45,5 +46,12 @@ public class Job {
         this.reward = reward;
         this.detail = detail;
         this.skill = skill;
+    }
+
+    public void updateJob(UpdateJobRequestDto updateJobRequestDto) {
+        this.position = updateJobRequestDto.getPosition();
+        this.reward = updateJobRequestDto.getReward();
+        this.detail = updateJobRequestDto.getDetail();
+        this.skill = updateJobRequestDto.getSkill();
     }
 }
