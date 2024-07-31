@@ -3,6 +3,8 @@ package com.example.wanted_pre_onboarding_backend.domain.job;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
-
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class JobServiceTest {
@@ -28,30 +31,38 @@ class JobServiceTest {
 	@Mock
 	private CompanyRepository companyRepository;
 
-	private RegisterJobRequestDto dto;
+	private RegisterJobRequestDto registerJobRequestDto;
+	private UpdateJobRequestDto updateJobRequestDto;
 	private Job savedJob;
 
 	@BeforeEach
 	void setUp() {
-		dto = new RegisterJobRequestDto();
-		dto.setCompanyId(1);
-		dto.setPosition("백엔드 주니어 개발자");
-		dto.setReward(1000000);
-		dto.setDetail("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
-		dto.setSkill("Python");
+		registerJobRequestDto = new RegisterJobRequestDto();
+		registerJobRequestDto.setCompanyId(1);
+		registerJobRequestDto.setPosition("백엔드 주니어 개발자");
+		registerJobRequestDto.setReward(1000000);
+		registerJobRequestDto.setDetail("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
+		registerJobRequestDto.setSkill("Python");
 
-		savedJob = dto.toEntity();
+		savedJob = registerJobRequestDto.toEntity();
+
+		UpdateJobRequestDto updateJobRequestDto = new UpdateJobRequestDto(
+			"백엔드 주니어 개발자",
+			1500000,
+			"원티드랩에서 백엔드 주니어 개발자를 \"적극\" 채용합니다. 자격요건은..",
+			"Python"
+		);
 	}
 
 	@Test
 	@DisplayName("채용공고 등록 - 성공")
 	void saveJobSuccess() {
 		// given
-		when(companyRepository.existsById(dto.getCompanyId())).thenReturn(true);
+		when(companyRepository.existsById(registerJobRequestDto.getCompanyId())).thenReturn(true);
 		when(jobRepository.save(any(Job.class))).thenReturn(savedJob);
 
 		// when
-		Job result = jobService.saveJob(dto);
+		Job result = jobService.saveJob(registerJobRequestDto);
 
 		// then
 		assertNotNull(result);
@@ -62,11 +73,45 @@ class JobServiceTest {
 	@DisplayName("채용공고 등록 - 실패 : 존재하지 않는 회사 아이디")
 	void saveJobFailure() {
 		// given
-		when(companyRepository.existsById(dto.getCompanyId())).thenReturn(false);
+		when(companyRepository.existsById(registerJobRequestDto.getCompanyId())).thenReturn(false);
 
 		// when, then
 		assertThrows(CompanyNotFoundException.class, () -> {
-			jobService.saveJob(dto);
+			jobService.saveJob(registerJobRequestDto);
+		});
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 성공")
+	void updateJobSuccess() {
+		// given
+		Job job = registerJobRequestDto.toEntity();
+		Integer jobId = 3;
+
+		when(jobRepository.findById(jobId)).thenReturn(Optional.of(job));
+		when(jobRepository.save(any(Job.class))).thenReturn(job);
+
+		// when
+		Job result = jobService.updateJob(jobId, updateJobRequestDto);
+
+		// then
+		assertNotNull(result);
+		assertEquals(updateJobRequestDto.getPosition(), result.getPosition());
+		assertEquals(updateJobRequestDto.getReward(), result.getReward());
+		assertEquals(updateJobRequestDto.getDetail(), result.getDetail());
+		assertEquals(updateJobRequestDto.getSkill(), result.getSkill());
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 공고 아이디")
+	void updateJobFailure() {
+		// given
+		Integer jobId = 1;
+		when(jobRepository.findById(jobId)).thenReturn(java.util.Optional.empty());
+
+		// when, then
+		assertThrows(JobNotFoundException.class, () -> {
+			jobService.updateJob(jobId, updateJobRequestDto);
 		});
 	}
 }
