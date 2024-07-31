@@ -59,14 +59,14 @@ POST /jobs
     "success": false,
     "response" : null,
     "error": {
-        "message": "채용공고 등록 실패 : 회사가 존재하지 않습니다.",
+        "message": "회사가 존재하지 않습니다.",
         "httpStatus": "NOT_FOUND"
     }
 }
 ```
 
 2. 유효하지 않은 필드값일 경우
-- Status Code : 404
+- Status Code : 400
 
 ```json
 {
