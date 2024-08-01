@@ -46,7 +46,7 @@ class JobServiceTest {
 
 		savedJob = registerJobRequestDto.toEntity();
 
-		UpdateJobRequestDto updateJobRequestDto = new UpdateJobRequestDto(
+		updateJobRequestDto = new UpdateJobRequestDto(
 			"백엔드 주니어 개발자",
 			1500000,
 			"원티드랩에서 백엔드 주니어 개발자를 \"적극\" 채용합니다. 자격요건은..",
@@ -85,11 +85,10 @@ class JobServiceTest {
 	@DisplayName("채용공고 수정 - 성공")
 	void updateJobSuccess() {
 		// given
-		Job job = registerJobRequestDto.toEntity();
 		Integer jobId = 3;
 
-		when(jobRepository.findById(jobId)).thenReturn(Optional.of(job));
-		when(jobRepository.save(any(Job.class))).thenReturn(job);
+		when(jobRepository.findById(jobId)).thenReturn(Optional.of(savedJob));
+		when(jobRepository.save(any(Job.class))).thenReturn(savedJob);
 
 		// when
 		Job result = jobService.updateJob(jobId, updateJobRequestDto);
