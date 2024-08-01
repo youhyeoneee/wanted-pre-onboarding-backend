@@ -285,5 +285,35 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.error.message.position").value("포지션은 필수 요소입니다."))
 			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
 	}
+
+	@Test
+	@DisplayName("채용공고 삭제 - 성공")
+	void deleteJobSuccess() throws Exception {
+		// given
+		int jobId = 1;
+		doNothing().when(jobService).deleteJob(eq(jobId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/jobs/" + jobId))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response").value(jobId + "번 채용공고가 삭제되었습니다."));
+	}
+
+	@Test
+	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
+	void deleteJobFailByJobId() throws Exception {
+		// given
+		int jobId = 0;
+		doThrow(new JobNotFoundException(jobId)).when(jobService).deleteJob(eq(jobId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/jobs/" + jobId))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+	}
+
 }
 
