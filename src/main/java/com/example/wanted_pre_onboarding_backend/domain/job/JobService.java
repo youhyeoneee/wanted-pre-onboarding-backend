@@ -6,8 +6,11 @@ import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequest
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,5 +36,11 @@ public class JobService {
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new JobNotFoundException(jobId));
         job.updateJob(jobRequestDto);
 		return jobRepository.save(job);
+    }
+
+    @Transactional
+    public void deleteJob(Integer jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new JobNotFoundException(jobId));
+        jobRepository.delete(job);
     }
 }

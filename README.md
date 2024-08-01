@@ -5,12 +5,12 @@
 | No | Title      | Method   | URL                     | 
 |----|------------|----------|-------------------------|
 | 1  | 채용공고 등록    | `POST`   | `/api/jobs`             | 
-| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:id`         |   
-| 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:id`         |    
+| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:jobId`         |   
+| 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:jobId`         |    
 | 4  | 채용공고 목록 조회 | `GET`    | `/api/jobs`             |    
 | 5  | 채용공고 검색    | `GET`    | `/api/jobs?serch={검색어}` |    
-| 6  | 채용공고 상세 조회 | `GET`    | `/api/jobs/:id`         |     
-| 7  | 채용공고 지원    | `POST`   | `/api/jobs/:id/apply`   | 
+| 6  | 채용공고 상세 조회 | `GET`    | `/api/jobs/:jobId`         |     
+| 7  | 채용공고 지원    | `POST`   | `/api/jobs/:jobId/apply`   | 
 
 ### 1. 채용공고 등록
 
@@ -91,7 +91,7 @@ POST /api/jobs
 
 #### URL
 ```
-PATCH /api/jobs/:id
+PATCH /api/jobs/:jobId
 ```
 
 #### Request Body
@@ -162,5 +162,38 @@ or
     },
     "httpStatus": "BAD_REQUEST"
   }
+}
+```
+
+### 3. 채용공고 삭제
+
+DB에서 삭제됩니다.
+
+#### URL
+```
+DELETE /api/jobs/:jobId
+```
+
+#### Success Response
+- Status Code : 200
+```json
+{
+  "success": true,
+  "response": "1번 채용공고가 삭제되었습니다.",
+  "error": null
+}
+```
+
+#### Fail Response
+1. 존재하지 않은 채용공고 아이디일 경우
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "0번 채용공고가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
 }
 ```
