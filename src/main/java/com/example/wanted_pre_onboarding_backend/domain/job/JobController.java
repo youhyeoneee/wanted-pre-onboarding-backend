@@ -32,4 +32,10 @@ public class JobController {
         Job updatedJob = jobService.updateJob(jobId, jobRequestDto);
         return success(updatedJob);
     }
+
+    @DeleteMapping("/{jobId}")
+    public ApiUtils.ApiResult<String> deleteJob(@PathVariable Integer jobId) {
+        jobService.deleteJob(jobId);
+        return success(jobId + "번 채용공고가 삭제되었습니다.");
+    }
 }
