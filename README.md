@@ -164,3 +164,36 @@ or
   }
 }
 ```
+
+### 3. 채용공고 삭제
+
+DB에서 삭제됩니다.
+
+#### URL
+```
+DELETE /api/jobs/:jobId
+```
+
+#### Success Response
+- Status Code : 200
+```json
+{
+  "success": true,
+  "response": "1번 채용공고가 삭제되었습니다.",
+  "error": null
+}
+```
+
+#### Fail Response
+1. 존재하지 않은 채용공고 아이디일 경우
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "0번 채용공고가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
+}
+```
