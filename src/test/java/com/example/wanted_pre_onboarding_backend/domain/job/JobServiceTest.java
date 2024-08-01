@@ -113,4 +113,34 @@ class JobServiceTest {
 			jobService.updateJob(jobId, updateJobRequestDto);
 		});
 	}
+
+
+	@Test
+	@DisplayName("채용공고 삭제 - 성공")
+	void deleteJobSuccess() {
+		// given
+		int jobId = 1;
+		when(jobRepository.findById(jobId)).thenReturn(Optional.of(savedJob));
+		doNothing().when(jobRepository).delete(savedJob);
+
+		// when
+		jobService.deleteJob(jobId);
+
+		// then
+		verify(jobRepository, times(1)).delete(savedJob);
+	}
+
+	@Test
+	@DisplayName("채용공고 삭제 - 실패 : 존재하지 않는 공고 아이디")
+	void deleteJobFailure() {
+		// given
+		int jobId = 0;
+		when(jobRepository.findById(jobId)).thenReturn(java.util.Optional.empty());
+
+		// when, then
+		assertThrows(JobNotFoundException.class, () -> {
+			jobService.deleteJob(jobId);
+		});
+		verify(jobRepository, never()).delete(savedJob);
+	}
 }
