@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
@@ -24,7 +25,8 @@ public class JobController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiUtils.ApiResult registerJob(@Valid @RequestBody RegisterJobRequestDto jobRequestDto) {
         Job savedJob = jobService.saveJob(jobRequestDto);
-        return success(savedJob);
+        RegisterJobResponseDto jobResponseDto = jobService.getRegisterJobResponseDto(savedJob);
+        return success(jobResponseDto);
     }
 
     @PatchMapping("/{jobId}")

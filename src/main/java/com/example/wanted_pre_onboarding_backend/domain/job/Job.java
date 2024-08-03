@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
 
+import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -22,8 +23,9 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    // TODO: 객체지향적용 위해 Company 객체로 변경하기
-    private int companyId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
     private String position;
     private int reward;
     private String detail;
@@ -38,8 +40,8 @@ public class Job {
     private LocalDateTime updatedAt;
 
 
-    public Job(int companyId, String position, int reward, String detail, String skill) {
-        this.companyId = companyId;
+    public Job(Company company, String position, int reward, String detail, String skill) {
+        this.company = company;
         this.position = position;
         this.reward = reward;
         this.detail = detail;

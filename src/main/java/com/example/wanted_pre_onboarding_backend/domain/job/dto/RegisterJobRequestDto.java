@@ -1,5 +1,6 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
+import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.job.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
@@ -27,7 +28,7 @@ public class RegisterJobRequestDto {
     private String detail;
     private String skill;
 
-    public Job toEntity() {
-        return new Job(companyId, position, reward, detail, skill);
+    public Job toEntity(Company company) {
+        return new Job(company, position, reward, detail, skill);
     }
 }
