@@ -195,3 +195,50 @@ DELETE /api/jobs/:jobId
     }
 }
 ```
+
+### 4. 채용공고 목록 조회
+
+사용자는 채용공고 목록을 아래와 같이 확인할 수 있습니다.
+
+#### URL
+```
+get /api/jobs
+```
+
+#### Success Response
+- Status Code : 200
+```json
+{
+    "success": true,
+    "response": [
+        {
+            "companyId": 1,
+            "companyName": "원티드",
+            "nation": "한국",
+            "area": "서울",
+            "position": "백엔드 주니어 개발자",
+            "reward": 1500000,
+            "skill": "Python"
+        },
+        {
+            "companyId": 2,
+            "companyName": "네이버",
+            "nation": "한국",
+            "area": "판교",
+            "position": "Django 백엔드 개발자",
+            "reward": 1000000,
+            "skill": "Django"
+        }
+    ],
+    "error": null
+}
+```
+
+* 채용공고 목록이 비었을 경우
+```json
+{
+    "success": true,
+    "response": [],
+    "error": null
+}
+```
