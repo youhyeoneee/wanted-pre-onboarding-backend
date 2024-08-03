@@ -1,6 +1,8 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.success;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jobs")
@@ -20,17 +25,28 @@ public class JobController {
 
     private JobService jobService;
 
+    @GetMapping
+    public ApiUtils.ApiResult getJobList() {
+        List<Job> jobs = jobService.findAllJob();
+        List<JobInfoResponseDto> jobInfoResponseDtos = jobs.stream()
+            .map(JobInfoResponseDto::new)
+            .collect(Collectors.toList());
+        return success(jobInfoResponseDtos);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiUtils.ApiResult registerJob(@Valid @RequestBody RegisterJobRequestDto jobRequestDto) {
         Job savedJob = jobService.saveJob(jobRequestDto);
-        return success(savedJob);
+        JobResponseDto jobResponseDto = jobService.createJobResponseDto(savedJob);
+        return success(jobResponseDto);
     }
 
     @PatchMapping("/{jobId}")
     public ApiUtils.ApiResult updateJob(@PathVariable Integer jobId, @Valid @RequestBody UpdateJobRequestDto jobRequestDto) {
         Job updatedJob = jobService.updateJob(jobId, jobRequestDto);
-        return success(updatedJob);
+        JobResponseDto jobResponseDto = jobService.createJobResponseDto(updatedJob);
+        return success(jobResponseDto);
     }
 
     @DeleteMapping("/{jobId}")
