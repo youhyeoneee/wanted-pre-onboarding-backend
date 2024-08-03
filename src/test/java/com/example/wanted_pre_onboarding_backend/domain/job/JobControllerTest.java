@@ -5,6 +5,9 @@ import static org.springframework.test.util.ReflectionTestUtils.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -340,5 +343,49 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
 	}
 
+	@Test
+	@DisplayName("채용공고 목록 조회 - 성공 : 2개 리스트")
+	void getJobListSuccess() throws Exception {
+		// given
+		Job job1 = new Job(new Company(1, "원티드랩", "한국", "서울"),
+			"백엔드 주니어 개발자", 1000000, "세부사항1", "Python");
+		Job job2 = new Job(new Company(2, "네이버", "한국", "판교"),
+			"프론트엔드 주니어 개발자", 1200000, "세부사항2", "JavaScript");
+		List<Job> jobs = Arrays.asList(job1, job2);
+		when(jobService.findAllJob()).thenReturn(jobs);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response[0].companyId").value(1))
+			.andExpect(jsonPath("$.response[0].companyName").value("원티드랩"))
+			.andExpect(jsonPath("$.response[0].nation").value("한국"))
+			.andExpect(jsonPath("$.response[0].area").value("서울"))
+			.andExpect(jsonPath("$.response[0].position").value("백엔드 주니어 개발자"))
+			.andExpect(jsonPath("$.response[0].reward").value(1000000))
+			.andExpect(jsonPath("$.response[0].skill").value("Python"))
+			.andExpect(jsonPath("$.response[1].companyId").value(2))
+			.andExpect(jsonPath("$.response[1].companyName").value("네이버"))
+			.andExpect(jsonPath("$.response[1].nation").value("한국"))
+			.andExpect(jsonPath("$.response[1].area").value("판교"))
+			.andExpect(jsonPath("$.response[1].position").value("프론트엔드 주니어 개발자"))
+			.andExpect(jsonPath("$.response[1].reward").value(1200000))
+			.andExpect(jsonPath("$.response[1].skill").value("JavaScript"));
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 조회 - 성공 : 빈 리스트")
+	void getJobListFailureNoData() throws Exception {
+		// given
+		when(jobService.findAllJob()).thenReturn(Collections.emptyList());
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response").isEmpty());
+	}
 }
 
