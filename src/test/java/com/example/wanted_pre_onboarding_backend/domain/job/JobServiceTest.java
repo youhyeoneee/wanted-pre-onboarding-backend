@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
@@ -92,10 +92,10 @@ class JobServiceTest {
 	}
 
 	@Test
-	@DisplayName("RegisterJobResponseDto 생성 - 성공")
-	void getRegisterJobResponseDtoSuccess() {
+	@DisplayName("JobResponseDto 생성 - 성공")
+	void createJobResponseDtoSuccess() {
 		// when
-		RegisterJobResponseDto responseDto = jobService.getRegisterJobResponseDto(savedJob);
+		JobResponseDto responseDto = jobService.createJobResponseDto(savedJob);
 
 		// then
 		assertNotNull(responseDto);

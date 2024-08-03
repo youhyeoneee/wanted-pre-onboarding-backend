@@ -1,11 +1,9 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
-import java.util.List;
-
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
@@ -14,7 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,8 +30,8 @@ public class JobService {
         return jobRepository.save(job);
     }
 
-    public RegisterJobResponseDto getRegisterJobResponseDto(Job job) {
-        return new RegisterJobResponseDto(job);
+    public JobResponseDto createJobResponseDto(Job job) {
+        return new JobResponseDto(job);
     }
 
 	public Job updateJob(Integer jobId, UpdateJobRequestDto jobRequestDto) {

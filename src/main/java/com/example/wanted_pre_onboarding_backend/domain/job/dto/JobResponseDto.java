@@ -2,8 +2,6 @@ package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.example.wanted_pre_onboarding_backend.domain.job.Job;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -15,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class RegisterJobResponseDto {
+public class JobResponseDto {
 	int id;
 	private Integer companyId;
 	private String position;
@@ -27,7 +25,7 @@ public class RegisterJobResponseDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public RegisterJobResponseDto(Job job) {
+	public JobResponseDto(Job job) {
 		this.id = job.getId();
 		this.companyId = job.getCompany().getId();
 		this.position = job.getPosition();

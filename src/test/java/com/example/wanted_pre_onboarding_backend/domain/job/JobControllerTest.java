@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
@@ -37,7 +37,7 @@ class JobControllerTest {
 	private ObjectMapper objectMapper;
 
 	private RegisterJobRequestDto registerJobRequestDto;
-	private RegisterJobResponseDto registerJobResponseDto;
+	private JobResponseDto jobResponseDto;
 	private UpdateJobRequestDto updateJobRequestDto;
 	private Job savedJob;
 	private Company company;
@@ -59,7 +59,7 @@ class JobControllerTest {
 		setField(savedJob, "id", 1);
 		setField(savedJob, "createdAt", LocalDateTime.now());
 		setField(savedJob, "updatedAt", LocalDateTime.now());
-		registerJobResponseDto = new RegisterJobResponseDto(savedJob);
+		jobResponseDto = new JobResponseDto(savedJob);
 
 
 		updateJobRequestDto = new UpdateJobRequestDto(
@@ -75,7 +75,7 @@ class JobControllerTest {
 	void registerJobSuccess() throws Exception {
 		// given
 		when(jobService.saveJob(any(RegisterJobRequestDto.class))).thenReturn(savedJob);
-		when(jobService.getRegisterJobResponseDto(any(Job.class))).thenReturn(registerJobResponseDto);
+		when(jobService.createJobResponseDto(any(Job.class))).thenReturn(jobResponseDto);
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
@@ -215,7 +215,9 @@ class JobControllerTest {
 			updateJobRequestDto.getDetail(),
 			updateJobRequestDto.getSkill());
 
+		jobResponseDto = new JobResponseDto(updatedJob);
 		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenReturn(updatedJob);
+		when(jobService.createJobResponseDto(updatedJob)).thenReturn(jobResponseDto);
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
