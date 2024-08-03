@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
@@ -34,16 +37,29 @@ class JobControllerTest {
 	private ObjectMapper objectMapper;
 
 	private RegisterJobRequestDto registerJobRequestDto;
+	private RegisterJobResponseDto registerJobResponseDto;
 	private UpdateJobRequestDto updateJobRequestDto;
-
+	private Job savedJob;
+	private Company company;
 	@BeforeEach
 	void setUp() {
+
+		int companyId = 1;
+
 		registerJobRequestDto = new RegisterJobRequestDto();
-		registerJobRequestDto.setCompanyId(1);
+		registerJobRequestDto.setCompanyId(companyId);
 		registerJobRequestDto.setPosition("백엔드 주니어 개발자");
 		registerJobRequestDto.setReward(1000000);
 		registerJobRequestDto.setDetail("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
 		registerJobRequestDto.setSkill("Python");
+
+		company = new Company(companyId, "원티드", "한국", "서울");
+
+		savedJob = registerJobRequestDto.toEntity(company);
+		setField(savedJob, "id", 1);
+		setField(savedJob, "createdAt", LocalDateTime.now());
+		setField(savedJob, "updatedAt", LocalDateTime.now());
+		registerJobResponseDto = new RegisterJobResponseDto(savedJob);
 
 
 		updateJobRequestDto = new UpdateJobRequestDto(
@@ -58,8 +74,8 @@ class JobControllerTest {
 	@DisplayName("채용공고 등록 - 성공")
 	void registerJobSuccess() throws Exception {
 		// given
-		Job savedJob = registerJobRequestDto.toEntity();
 		when(jobService.saveJob(any(RegisterJobRequestDto.class))).thenReturn(savedJob);
+		when(jobService.getRegisterJobResponseDto(any(Job.class))).thenReturn(registerJobResponseDto);
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
@@ -67,7 +83,14 @@ class JobControllerTest {
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response.position").value("백엔드 주니어 개발자"));
+			.andExpect(jsonPath("$.response.id").value(1))
+			.andExpect(jsonPath("$.response.companyId").value(registerJobRequestDto.getCompanyId()))
+			.andExpect(jsonPath("$.response.position").value(registerJobRequestDto.getPosition()))
+			.andExpect(jsonPath("$.response.reward").value(registerJobRequestDto.getReward()))
+			.andExpect(jsonPath("$.response.detail").value(registerJobRequestDto.getDetail()))
+			.andExpect(jsonPath("$.response.skill").value(registerJobRequestDto.getSkill()))
+            .andExpect(jsonPath("$.response.createdAt").isNotEmpty())
+			.andExpect(jsonPath("$.response.updatedAt").isNotEmpty());
 	}
 
 	@Test
@@ -186,7 +209,7 @@ class JobControllerTest {
 	void updateJobSuccess() throws Exception {
 		// given
 		int jobId = 1;
-		Job updatedJob = new Job(1,
+		Job updatedJob = new Job(company,
 			updateJobRequestDto.getPosition(),
 			updateJobRequestDto.getReward(),
 			updateJobRequestDto.getDetail(),
