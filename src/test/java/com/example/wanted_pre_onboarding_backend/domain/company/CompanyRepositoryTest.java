@@ -18,7 +18,7 @@ class CompanyRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
-		companyRepository.save(new Company(1, "원티드"));
+		companyRepository.save(new Company(1, "원티드", "한국", "서울"));
 	}
 
 	@Test
@@ -38,7 +38,7 @@ class CompanyRepositoryTest {
 	@DisplayName("회사 아이디 존재 여부 확인 - 실패 : 존재하지 않음")
 	void existsByIdFailure() {
 		// given
-		int companyId = 2;
+		int companyId = 0;
 
 		// when
 		boolean result = companyRepository.existsById(companyId);
