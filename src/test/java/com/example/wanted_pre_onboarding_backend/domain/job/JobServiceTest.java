@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -170,5 +172,24 @@ class JobServiceTest {
 			jobService.deleteJob(jobId);
 		});
 		verify(jobRepository, never()).delete(savedJob);
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 조회 - 성공")
+	void findAllJobSuccess() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+
+		when(jobRepository.findAll()).thenReturn(jobs);
+
+		// when
+		List<Job> result = jobService.findAllJob();
+
+		// then
+		assertNotNull(result);
+		assertEquals(2, result.size());
 	}
 }
