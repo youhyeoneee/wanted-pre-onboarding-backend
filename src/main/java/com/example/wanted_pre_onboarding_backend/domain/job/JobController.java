@@ -1,5 +1,6 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.success;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jobs")
@@ -20,6 +24,15 @@ import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.suc
 public class JobController {
 
     private JobService jobService;
+
+    @GetMapping
+    public ApiUtils.ApiResult getJobList() {
+        List<Job> jobs = jobService.findAllJob();
+        List<JobInfoResponseDto> jobInfoResponseDtos = jobs.stream()
+            .map(JobInfoResponseDto::new)
+            .collect(Collectors.toList());
+        return success(jobInfoResponseDtos);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

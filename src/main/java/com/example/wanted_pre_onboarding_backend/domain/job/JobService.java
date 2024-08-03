@@ -1,7 +1,10 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import java.util.List;
+
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
@@ -44,5 +47,9 @@ public class JobService {
     public void deleteJob(Integer jobId) {
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new JobNotFoundException(jobId));
         jobRepository.delete(job);
+    }
+
+    public List<Job> findAllJob() {
+        return jobRepository.findAll();
     }
 }
