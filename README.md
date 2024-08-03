@@ -45,7 +45,6 @@ POST /api/jobs
     "skill": "Python",
     "createdAt": "2024-07-31 11:27:16",
     "updatedAt": "2024-07-31 11:27:16",
-    "deletedAt": null
   },
   "error": null
 }
@@ -128,7 +127,6 @@ or
         "skill": "Python",
         "createdAt": "2024-07-31 13:04:01",
         "updatedAt": "2024-07-31 19:05:36",
-        "deletedAt": null
     },
     "error": null
 }
