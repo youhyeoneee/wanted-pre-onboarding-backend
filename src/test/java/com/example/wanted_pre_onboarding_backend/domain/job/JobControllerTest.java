@@ -98,7 +98,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 등록 - 실패 : 보상금 필드에 문자 입력")
-	void registerJobFailByReward1() throws Exception {
+	void registerJobFailureByReward1() throws Exception {
 		// given
 		String invalidJson = "{ \"companyId\": 1, \"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
@@ -114,7 +114,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 등록 - 실패 : 보상금 필드에 0미만의 숫자 입력")
-	void registerJobFailByReward2() throws Exception {
+	void registerJobFailureByReward2() throws Exception {
 		// given
 		registerJobRequestDto.setReward(-1);
 
@@ -236,7 +236,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 채용공고 아이디에 문자 입력")
-	void updateJobFailByJobId() throws Exception {
+	void updateJobFailureByJobId() throws Exception {
 		// given
 		String jobId = "aaa";
 
@@ -251,7 +251,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
-	void updateJobFailByJobId2() throws Exception {
+	void updateJobFailureByJobId2() throws Exception {
 		// given
 		int jobId = 0;
 		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(new JobNotFoundException(jobId));
@@ -268,7 +268,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 문자 입력")
-	void updateJobFailByReward1() throws Exception {
+	void updateJobFailureByReward1() throws Exception {
 		// given
 		String invalidJson = "{\"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
@@ -284,7 +284,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 0미만의 숫자 입력")
-	void updateJobFailByReward2() throws Exception {
+	void updateJobFailureByReward2() throws Exception {
 		// given
 		updateJobRequestDto.setReward(-1);
 
@@ -300,7 +300,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 포지션 필드에 빈 문자열 입력")
-	void updateJobFaulureByPosition() throws Exception {
+	void updateJobFailureByPosition() throws Exception {
 		// given
 		updateJobRequestDto.setPosition("");
 
@@ -330,7 +330,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
-	void deleteJobFailByJobId() throws Exception {
+	void deleteJobFailureByJobId() throws Exception {
 		// given
 		int jobId = 0;
 		doThrow(new JobNotFoundException(jobId)).when(jobService).deleteJob(eq(jobId));
