@@ -212,7 +212,7 @@ get /api/jobs
     "success": true,
     "response": [
         {
-            "companyId": 1,
+            "jobId": 1,
             "companyName": "원티드",
             "nation": "한국",
             "area": "서울",
@@ -221,7 +221,7 @@ get /api/jobs
             "skill": "Python"
         },
         {
-            "companyId": 2,
+            "jobId": 2,
             "companyName": "네이버",
             "nation": "한국",
             "area": "판교",
