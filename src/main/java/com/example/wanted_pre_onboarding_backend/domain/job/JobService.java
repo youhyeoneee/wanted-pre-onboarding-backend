@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
@@ -51,5 +50,19 @@ public class JobService {
 
     public List<Job> findAllJob() {
         return jobRepository.findAll();
+    }
+
+    public Job findJobById(Integer jobId) {
+        return jobRepository.findById(jobId).orElseThrow(() -> new JobNotFoundException(jobId));
+    }
+
+    public List<Job> findJobsByCompanyId(Integer companyId) {
+        companyRepository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
+        return jobRepository.findByCompanyId(companyId);
+    }
+
+    public List<Integer> getOtherJobIds(List<Job> jobs, Job job) {
+        return jobs.stream().filter(j -> !j.equals(job))
+            .map(Job::getId).toList();
     }
 }

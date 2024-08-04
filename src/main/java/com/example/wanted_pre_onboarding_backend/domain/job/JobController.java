@@ -1,5 +1,6 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobDetailResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
@@ -40,6 +41,16 @@ public class JobController {
         Job savedJob = jobService.saveJob(jobRequestDto);
         JobResponseDto jobResponseDto = jobService.createJobResponseDto(savedJob);
         return success(jobResponseDto);
+    }
+
+    @GetMapping("/{jobId}")
+    public ApiUtils.ApiResult getJobDetail(@PathVariable Integer jobId) {
+        Job job = jobService.findJobById(jobId);
+        Integer companyId = job.getCompany().getId();
+        List<Job> jobsByCompanyId = jobService.findJobsByCompanyId(companyId);
+        List<Integer> otherJobIds = jobService.getOtherJobIds(jobsByCompanyId, job);
+        JobDetailResponseDto jobDetailResponseDto = new JobDetailResponseDto(job, otherJobIds);
+        return success(jobDetailResponseDto);
     }
 
     @PatchMapping("/{jobId}")

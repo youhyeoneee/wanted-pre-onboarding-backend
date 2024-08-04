@@ -98,7 +98,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 등록 - 실패 : 보상금 필드에 문자 입력")
-	void registerJobFailByReward1() throws Exception {
+	void registerJobFailureByReward1() throws Exception {
 		// given
 		String invalidJson = "{ \"companyId\": 1, \"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
@@ -114,7 +114,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 등록 - 실패 : 보상금 필드에 0미만의 숫자 입력")
-	void registerJobFailByReward2() throws Exception {
+	void registerJobFailureByReward2() throws Exception {
 		// given
 		registerJobRequestDto.setReward(-1);
 
@@ -236,7 +236,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 채용공고 아이디에 문자 입력")
-	void updateJobFailByJobId() throws Exception {
+	void updateJobFailureByJobId() throws Exception {
 		// given
 		String jobId = "aaa";
 
@@ -251,7 +251,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
-	void updateJobFailByJobId2() throws Exception {
+	void updateJobFailureByJobId2() throws Exception {
 		// given
 		int jobId = 0;
 		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(new JobNotFoundException(jobId));
@@ -268,7 +268,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 문자 입력")
-	void updateJobFailByReward1() throws Exception {
+	void updateJobFailureByReward1() throws Exception {
 		// given
 		String invalidJson = "{\"position\": \"백엔드 주니어 개발자\", \"reward\": \"aaaaa\", \"detail\": "
 			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
@@ -284,7 +284,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 보상금 필드에 0미만의 숫자 입력")
-	void updateJobFailByReward2() throws Exception {
+	void updateJobFailureByReward2() throws Exception {
 		// given
 		updateJobRequestDto.setReward(-1);
 
@@ -300,7 +300,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 포지션 필드에 빈 문자열 입력")
-	void updateJobFaulureByPosition() throws Exception {
+	void updateJobFailureByPosition() throws Exception {
 		// given
 		updateJobRequestDto.setPosition("");
 
@@ -330,7 +330,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 수정 - 실패 : 존재하지 않는 채용공고 아이디")
-	void deleteJobFailByJobId() throws Exception {
+	void deleteJobFailureByJobId() throws Exception {
 		// given
 		int jobId = 0;
 		doThrow(new JobNotFoundException(jobId)).when(jobService).deleteJob(eq(jobId));
@@ -351,6 +351,8 @@ class JobControllerTest {
 			"백엔드 주니어 개발자", 1000000, "세부사항1", "Python");
 		Job job2 = new Job(new Company(2, "네이버", "한국", "판교"),
 			"프론트엔드 주니어 개발자", 1200000, "세부사항2", "JavaScript");
+		setField(job1, "id", 1);
+		setField(job2, "id", 2);
 		List<Job> jobs = Arrays.asList(job1, job2);
 		when(jobService.findAllJob()).thenReturn(jobs);
 
@@ -358,14 +360,14 @@ class JobControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response[0].companyId").value(1))
+			.andExpect(jsonPath("$.response[0].jobId").value(1))
 			.andExpect(jsonPath("$.response[0].companyName").value("원티드랩"))
 			.andExpect(jsonPath("$.response[0].nation").value("한국"))
 			.andExpect(jsonPath("$.response[0].area").value("서울"))
 			.andExpect(jsonPath("$.response[0].position").value("백엔드 주니어 개발자"))
 			.andExpect(jsonPath("$.response[0].reward").value(1000000))
 			.andExpect(jsonPath("$.response[0].skill").value("Python"))
-			.andExpect(jsonPath("$.response[1].companyId").value(2))
+			.andExpect(jsonPath("$.response[1].jobId").value(2))
 			.andExpect(jsonPath("$.response[1].companyName").value("네이버"))
 			.andExpect(jsonPath("$.response[1].nation").value("한국"))
 			.andExpect(jsonPath("$.response[1].area").value("판교"))
@@ -387,5 +389,84 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.success").value(true))
 			.andExpect(jsonPath("$.response").isEmpty());
 	}
+
+	@Test
+	@DisplayName("채용공고 상세 조회 - 성공 : 회사의 다른 채용공고 2개")
+	void getJobDetailSuccess() throws Exception {
+		// given
+		int jobId = 1;
+		int companyId = 1;
+		setField(savedJob, "id", jobId);
+		when(jobService.findJobById(anyInt())).thenReturn(savedJob);
+
+		Job job2 = new Job();
+		Job job3 = new Job();
+		setField(job2, "id", 2);
+		setField(job3, "id", 3);
+		List<Job> jobs = Arrays.asList(savedJob, job2, job3);
+		when(jobService.findJobsByCompanyId(anyInt())).thenReturn(jobs);
+		when(jobService.getOtherJobIds(jobs, savedJob)).thenReturn(Arrays.asList(2, 3));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs/" + jobId)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response.jobId").value(1))
+			.andExpect(jsonPath("$.response.companyName").value("원티드"))
+			.andExpect(jsonPath("$.response.nation").value("한국"))
+			.andExpect(jsonPath("$.response.area").value("서울"))
+			.andExpect(jsonPath("$.response.position").value("백엔드 주니어 개발자"))
+			.andExpect(jsonPath("$.response.reward").value(1000000))
+			.andExpect(jsonPath("$.response.skill").value("Python"))
+			.andExpect(jsonPath("$.response.detail").value("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은.."))
+			.andExpect(jsonPath("$.response.otherJobIds[0]").value(2))
+			.andExpect(jsonPath("$.response.otherJobIds[1]").value(3));
+	}
+
+	@Test
+	@DisplayName("채용공고 상세 조회 - 성공 : 회사의 다른 채용공고 없음")
+	void getJobDetailSuccess2() throws Exception {
+		// given
+		int jobId = 17;
+		int companyId = 3;
+		Job job17 = new Job(new Company(companyId, "구글", "미국", "뉴욕"),
+			"백엔드 주니어 개발자", 1000000, "구글에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은..", "Django");
+		setField(job17, "id", jobId);
+
+		when(jobService.findJobById(anyInt())).thenReturn(job17);
+		when(jobService.findJobsByCompanyId(anyInt())).thenReturn(Collections.emptyList());
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs/" + jobId)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response.jobId").value(jobId))
+			.andExpect(jsonPath("$.response.companyName").value("구글"))
+			.andExpect(jsonPath("$.response.nation").value("미국"))
+			.andExpect(jsonPath("$.response.area").value("뉴욕"))
+			.andExpect(jsonPath("$.response.position").value("백엔드 주니어 개발자"))
+			.andExpect(jsonPath("$.response.reward").value(1000000))
+			.andExpect(jsonPath("$.response.skill").value("Django"))
+			.andExpect(jsonPath("$.response.detail").value("구글에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은.."))
+			.andExpect(jsonPath("$.response.otherJobIds").isEmpty());
+	}
+
+	@Test
+	@DisplayName("채용공고 상세 조회 - 실패 : 존재하지 않는 채용공고 아이디")
+	void getJobDetailFailure() throws Exception{
+		// given
+		int jobId = 0;
+		doThrow(new JobNotFoundException(jobId)).when(jobService).findJobById(eq(jobId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs/" + jobId))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+	}
+
 }
 
