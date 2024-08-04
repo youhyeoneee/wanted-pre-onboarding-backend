@@ -242,3 +242,52 @@ get /api/jobs
     "error": null
 }
 ```
+
+### 6. 채용공고 상세 조회
+
+사용자는 채용상세 페이지를 아래와 같이 확인할 수 있습니다.
+- “채용내용”이 추가적으로 담겨있음.
+- 해당 회사가 올린 다른 채용공고 가 추가적으로 포함됩니다
+
+### URL
+```
+GET /api/jobs/:jobId
+```
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "response": {
+    "jobId": 10,
+    "companyName": "원티드",
+    "nation": "한국",
+    "area": "서울",
+    "position": "백엔드 주니어 개발자",
+    "reward": 1500000,
+    "detail": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+    "skill": "Python",
+    "otherJobIds": [
+      12,
+      13,
+      14
+    ]
+  },
+  "error": null
+}
+```
+
+#### Fail Response
+1. 존재하지 않은 채용공고 아이디일 경우
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "0번 채용공고가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
+}
+```
