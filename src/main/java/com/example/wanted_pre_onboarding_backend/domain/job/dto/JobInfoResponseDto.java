@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class JobInfoResponseDto {
-	int companyId;
+	int jobId;
 	String companyName;
 	String nation;
 	String area;
@@ -15,7 +15,7 @@ public class JobInfoResponseDto {
 	String skill;
 
 	public JobInfoResponseDto(Job job) {
-		this.companyId = job.getCompany().getId();
+		this.jobId = job.getId();
 		this.companyName = job.getCompany().getCompanyName();
 		this.nation = job.getCompany().getNation();
 		this.area = job.getCompany().getArea();
