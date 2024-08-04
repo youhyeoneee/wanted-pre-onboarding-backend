@@ -6,6 +6,7 @@ import static org.springframework.test.util.ReflectionTestUtils.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobDetailResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
@@ -191,5 +194,91 @@ class JobServiceTest {
 		// then
 		assertNotNull(result);
 		assertEquals(2, result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 아이디로 조회 - 성공")
+	void findJobByIdSuccess() {
+		// given
+		when(jobRepository.findById(anyInt())).thenReturn(Optional.of(savedJob));
+
+		// when
+		Job job = jobService.findJobById(1);
+
+		// then
+		assertNotNull(job);
+		assertEquals(1, job.getId());
+	}
+
+
+	@Test
+	@DisplayName("채용공고 아이디로 조회 - 실패")
+	void findJobByIdFailure() {
+		// given
+		when(jobRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
+
+		// when, then
+		assertThrows(JobNotFoundException.class, () -> {
+			jobService.findJobById(1);
+		});
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 회사 아이디로 조회 - 성공")
+	void findJobsByCompanyIdSuccess2() {
+		// given
+		Job job = new Job();
+		List<Job> jobs = Arrays.asList(savedJob, job);
+		when(jobRepository.findByCompanyId(anyInt())).thenReturn(jobs);
+		when(companyRepository.findById(anyInt())).thenReturn(Optional.of(company));
+
+		// when
+		List<Job> result = jobService.findJobsByCompanyId(1);
+
+		// then
+		assertEquals(2, result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 회사 아이디로 조회 - 실패 : 존재하지 않는 회사 아이디")
+	void findJobsByCompanyIdSuccess0() {
+		// given
+		when(companyRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+		// when, then
+		assertThrows(CompanyNotFoundException.class, () -> {
+			jobService.findJobsByCompanyId(1);
+		});
+	}
+
+	@Test
+	@DisplayName("나와 다른 채용공고 아이디 추출 - 성공 : 2개")
+	void getOtherJobIdsSuccess2() {
+		// given
+		Job job = new Job();
+		Job job2 = new Job();
+		setField(job, "id", 2);
+		setField(job2, "id", 3);
+		List<Job> jobs = Arrays.asList(savedJob, job, job2);
+
+		// when
+		List<Integer> result = jobService.getOtherJobIds(jobs, savedJob);
+
+		// then
+		assertEquals(2, result.size());
+		assertEquals(Arrays.asList(2, 3), result);
+	}
+
+	@Test
+	@DisplayName("나와 다른 채용공고 아이디 추출 - 성공 : 0개")
+	void getOtherJobIdsSuccess0() {
+		// given
+		List<Job> jobs = Arrays.asList(savedJob);
+
+		// when
+		List<Integer> result = jobService.getOtherJobIds(jobs, savedJob);
+
+		// then
+		assertEquals(0, result.size());
 	}
 }
