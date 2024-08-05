@@ -5,12 +5,12 @@
 | No | Title      | Method   | URL                     | 
 |----|------------|----------|-------------------------|
 | 1  | 채용공고 등록    | `POST`   | `/api/jobs`             | 
-| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:jobId`         |   
-| 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:jobId`         |    
+| 2  | 채용공고 수정    | `PATCH`  | `/api/jobs/:jobId`      |   
+| 3  | 채용공고 삭제    | `DELETE` | `/api/jobs/:jobId`      |    
 | 4  | 채용공고 목록 조회 | `GET`    | `/api/jobs`             |    
 | 5  | 채용공고 검색    | `GET`    | `/api/jobs?serch={검색어}` |    
-| 6  | 채용공고 상세 조회 | `GET`    | `/api/jobs/:jobId`         |     
-| 7  | 채용공고 지원    | `POST`   | `/api/jobs/:jobId/apply`   | 
+| 6  | 채용공고 상세 조회 | `GET`    | `/api/jobs/:jobId`      |     
+| 7  | 채용공고 지원    | `POST`   | `/api/jobs/apply`       | 
 
 ### 1. 채용공고 등록
 
@@ -347,3 +347,94 @@ GET /api/jobs/:jobId
     }
 }
 ```
+
+## 7. 채용공고 지원
+
+사용자는 채용공고에 아래와 같이 지원합니다. 
+사용자는 1회만 지원 가능합니다.
+
+### URL
+```
+POST /api/jobs/apply
+```
+
+### Request Body
+```json
+{
+  "job_id": 1,
+  "user_id": 2
+}
+```
+
+### Success Response
+- Status Code : 201
+```json
+{
+  "success": true,
+  "response": {
+    "id": 2,
+    "jobId": 1,
+    "userId": 2,
+    "createdAt": "2024-08-05 14:54:22"
+  },
+  "error": null
+}
+```
+
+### Fail Response
+
+1. 유효하지 않은 필드값일 경우
+- Status Code : 400
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": {
+            "jobId": "채용공고 아이디는 1이상의 숫자여야 합니다.",
+            "userId": "유저 아이디는 1이상의 숫자여야 합니다."
+        },
+        "httpStatus": "BAD_REQUEST"
+    }
+}
+```
+
+2. 존재하지 않은 채용공고 아이디일 경우 
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "1번 채용공고가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
+}
+```
+
+3. 존재하지 않은 유저 아이디일 경우
+- Status Code : 404
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "2번 유저가 존재하지 않습니다.",
+        "httpStatus": "NOT_FOUND"
+    }
+}
+```
+
+4. 이미 지원한 경우 
+- Status Code : 409
+```json
+{
+    "success": false,
+    "response": null,
+    "error": {
+        "message": "이미 지원한 채용공고 입니다.",
+        "httpStatus": "CONFILCT"
+    }
+}
+```
+
