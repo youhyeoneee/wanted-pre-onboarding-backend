@@ -243,6 +243,62 @@ get /api/jobs
 }
 ```
 
+### 5. 채용공고 검색
+
+사용자는 (회사명, 국가, 지역, 채용 포지션, 사용 기술에) 검색어가 포함된 채용공고 목록을 아래와 같이 확인할 수 있습니다.
+
+### URL
+```
+/api/jobs?serch=Django
+```
+
+### Success Response
+- Status Code : 200
+```json
+{
+  "success": true,
+  "response": [
+    {
+      "jobId": 11,
+      "companyName": "네이버",
+      "nation": "한국",
+      "area": "판교",
+      "position": "Django 백엔드 개발자",
+      "reward": 1000000,
+      "skill": "Python"
+    },
+    {
+      "jobId": 12,
+      "companyName": "원티드",
+      "nation": "한국",
+      "area": "서울",
+      "position": "Python 백엔드 개발자",
+      "reward": 1000000,
+      "skill": "Django"
+    },
+    {
+      "jobId": 17,
+      "companyName": "구글",
+      "nation": "미국",
+      "area": "뉴욕",
+      "position": "Django 백엔드 개발자",
+      "reward": 1000000,
+      "skill": "Django"
+    }
+  ],
+  "error": null
+}
+```
+
+* 검색한 채용공고 목록이 비었을 경우
+```json
+{
+    "success": true,
+    "response": [],
+    "error": null
+}
+```
+
 ### 6. 채용공고 상세 조회
 
 사용자는 채용상세 페이지를 아래와 같이 확인할 수 있습니다.
