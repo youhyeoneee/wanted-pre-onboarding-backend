@@ -1,7 +1,5 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
-import com.example.wanted_pre_onboarding_backend.domain.job.Job;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

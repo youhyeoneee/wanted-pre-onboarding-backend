@@ -2,7 +2,7 @@ package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;

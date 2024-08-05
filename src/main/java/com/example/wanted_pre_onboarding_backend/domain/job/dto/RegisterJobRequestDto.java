@@ -1,7 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
-import com.example.wanted_pre_onboarding_backend.domain.job.Job;
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

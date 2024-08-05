@@ -1,7 +1,7 @@
-package com.example.wanted_pre_onboarding_backend.domain.job;
+package com.example.wanted_pre_onboarding_backend.domain.job.entity;
 
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

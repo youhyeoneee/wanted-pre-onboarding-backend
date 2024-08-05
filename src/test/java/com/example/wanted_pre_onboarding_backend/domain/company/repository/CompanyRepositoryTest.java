@@ -1,4 +1,4 @@
-package com.example.wanted_pre_onboarding_backend.domain.company;
+package com.example.wanted_pre_onboarding_backend.domain.company.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
+import com.example.wanted_pre_onboarding_backend.domain.company.repository.CompanyRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

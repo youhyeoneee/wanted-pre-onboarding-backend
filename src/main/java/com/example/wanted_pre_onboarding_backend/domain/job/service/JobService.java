@@ -1,23 +1,22 @@
-package com.example.wanted_pre_onboarding_backend.domain.job;
+package com.example.wanted_pre_onboarding_backend.domain.job.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
-import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
+import com.example.wanted_pre_onboarding_backend.domain.company.repository.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicaionHistoryRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
-import com.example.wanted_pre_onboarding_backend.domain.user.User;
-import com.example.wanted_pre_onboarding_backend.domain.user.UserRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.repository.JobRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.user.entity.User;
+import com.example.wanted_pre_onboarding_backend.domain.user.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

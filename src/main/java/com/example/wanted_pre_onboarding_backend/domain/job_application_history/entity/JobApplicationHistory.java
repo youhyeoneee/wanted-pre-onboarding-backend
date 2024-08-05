@@ -1,12 +1,11 @@
-package com.example.wanted_pre_onboarding_backend.domain.job_application_history;
+package com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
-import com.example.wanted_pre_onboarding_backend.domain.job.Job;
-import com.example.wanted_pre_onboarding_backend.domain.user.User;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
+import com.example.wanted_pre_onboarding_backend.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;

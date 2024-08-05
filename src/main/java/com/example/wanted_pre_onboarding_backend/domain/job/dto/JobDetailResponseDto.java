@@ -2,7 +2,7 @@ package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
 import java.util.List;
 
-import com.example.wanted_pre_onboarding_backend.domain.job.Job;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

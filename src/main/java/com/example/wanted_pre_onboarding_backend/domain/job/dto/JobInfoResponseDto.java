@@ -1,6 +1,6 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
-import com.example.wanted_pre_onboarding_backend.domain.job.Job;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 
 import lombok.Getter;
 

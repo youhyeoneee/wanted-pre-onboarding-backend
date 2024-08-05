@@ -1,4 +1,4 @@
-package com.example.wanted_pre_onboarding_backend.domain.job;
+package com.example.wanted_pre_onboarding_backend.domain.job.controller;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.*;
@@ -19,18 +19,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
+import com.example.wanted_pre_onboarding_backend.domain.job.controller.JobController;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistoryService;
-import com.example.wanted_pre_onboarding_backend.domain.user.User;
+import com.example.wanted_pre_onboarding_backend.domain.job.service.JobService;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.service.JobApplicationHistoryService;
+import com.example.wanted_pre_onboarding_backend.domain.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(JobController.class)

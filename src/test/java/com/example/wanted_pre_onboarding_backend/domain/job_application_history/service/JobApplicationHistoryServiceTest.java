@@ -1,4 +1,4 @@
-package com.example.wanted_pre_onboarding_backend.domain.job_application_history;
+package com.example.wanted_pre_onboarding_backend.domain.job_application_history.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.service.JobApplicationHistoryService;
 
 @ExtendWith(MockitoExtension.class)
 class JobApplicationHistoryServiceTest {

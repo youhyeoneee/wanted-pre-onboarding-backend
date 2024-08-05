@@ -1,7 +1,8 @@
-package com.example.wanted_pre_onboarding_backend.domain.job;
+package com.example.wanted_pre_onboarding_backend.domain.job.controller;
 
 import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.*;
 
+import com.example.wanted_pre_onboarding_backend.domain.job.service.JobService;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobDetailResponseDto;
@@ -9,9 +10,10 @@ import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseD
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobApplicationDuplicatedException;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistoryService;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.service.JobApplicationHistoryService;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

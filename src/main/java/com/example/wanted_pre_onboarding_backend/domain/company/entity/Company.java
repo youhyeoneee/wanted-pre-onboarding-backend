@@ -1,5 +1,4 @@
-package com.example.wanted_pre_onboarding_backend.domain.user;
-
+package com.example.wanted_pre_onboarding_backend.domain.company.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,14 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class User {
+@Table(name = "companys")
+public class Company {
     @Id
     private int id;
-    private String username;
-    private String pw;
+    private String companyName;
+    private String nation;
+    private String area;
 }

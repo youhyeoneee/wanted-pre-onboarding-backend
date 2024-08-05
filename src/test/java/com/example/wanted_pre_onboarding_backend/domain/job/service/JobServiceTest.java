@@ -1,4 +1,4 @@
-package com.example.wanted_pre_onboarding_backend.domain.job;
+package com.example.wanted_pre_onboarding_backend.domain.job.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -17,19 +17,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.wanted_pre_onboarding_backend.domain.company.Company;
-import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
+import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
+import com.example.wanted_pre_onboarding_backend.domain.company.repository.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicaionHistoryRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
-import com.example.wanted_pre_onboarding_backend.domain.user.User;
-import com.example.wanted_pre_onboarding_backend.domain.user.UserRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.repository.JobRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.service.JobService;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.user.entity.User;
+import com.example.wanted_pre_onboarding_backend.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class JobServiceTest {
