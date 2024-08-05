@@ -6,11 +6,18 @@ import java.util.stream.Collectors;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicaionHistoryRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.user.User;
+import com.example.wanted_pre_onboarding_backend.domain.user.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -25,6 +32,8 @@ public class JobService {
 
     private JobRepository jobRepository;
     private CompanyRepository companyRepository;
+    private UserRepository userRepository;
+    private JobApplicaionHistoryRepository jobApplicaionHistoryRepository;
 
     public Job saveJob(RegisterJobRequestDto jobRequestDto) {
         int companyId = jobRequestDto.getCompanyId();
@@ -79,4 +88,17 @@ public class JobService {
                     job.getSkill().contains(searchKeyword);
             }).toList();
 	}
+
+    public JobApplicationHistory saveJobApplicationHistory(int jobId, int userId) {
+        Job job = findJobById(jobId);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        JobApplicationHistory jobApplicationHistory = new JobApplicationHistory(job, user);
+        return jobApplicaionHistoryRepository.save(jobApplicationHistory);
+    }
+
+    public ApplyJobResponseDto createApplyJobResponseDto(JobApplicationHistory jobApplicationHistory) {
+        return new ApplyJobResponseDto(jobApplicationHistory);
+    }
 }

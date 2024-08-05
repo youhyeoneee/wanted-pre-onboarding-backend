@@ -6,7 +6,6 @@ import static org.springframework.test.util.ReflectionTestUtils.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,16 +16,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobDetailResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicaionHistoryRepository;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.user.User;
+import com.example.wanted_pre_onboarding_backend.domain.user.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class JobServiceTest {
@@ -39,6 +42,12 @@ class JobServiceTest {
 
 	@Mock
 	private CompanyRepository companyRepository;
+
+	@Mock
+	private UserRepository userRepository;
+
+	@Mock
+	private JobApplicaionHistoryRepository jobApplicaionHistoryRepository;
 
 	private RegisterJobRequestDto registerJobRequestDto;
 	private UpdateJobRequestDto updateJobRequestDto;
@@ -365,5 +374,73 @@ class JobServiceTest {
 
 		// then
 		assertEquals(1,  result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 지원내역 저장 - 성공")
+	void saveJobApplicationHistorySuccess() {
+		// given
+		int jobId = 1;
+		int userId = 2;
+		User user = new User(userId, "test", "test");
+		JobApplicationHistory jobApplicationHistory = new JobApplicationHistory(1, savedJob, user, LocalDateTime.now());
+		when(jobRepository.findById(anyInt())).thenReturn(Optional.of(savedJob));
+		when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
+		when(jobApplicaionHistoryRepository.save(any(JobApplicationHistory.class))).thenReturn(jobApplicationHistory);
+
+		// when
+		JobApplicationHistory result = jobService.saveJobApplicationHistory(jobId, userId);
+
+		// then
+		assertEquals(1, result.getId());
+		assertEquals(userId, result.getUser().getId());
+		assertEquals(jobId, result.getJob().getId());
+		assertNotNull(result.getCreatedAt());
+	}
+
+	@Test
+	@DisplayName("채용공고 지원내역 저장 - 실패 : 존재하지 않는 공고 아이디")
+	void saveJobApplicationHistoryFailureByJobId() {
+		// given
+		int jobId = 1;
+		int userId = 2;
+		when(jobRepository.findById(anyInt())).thenThrow(new JobNotFoundException(jobId));
+
+		// when, then
+		assertThrows(JobNotFoundException.class, () -> {
+			JobApplicationHistory result = jobService.saveJobApplicationHistory(jobId, userId);
+		});
+	}
+
+	@Test
+	@DisplayName("채용공고 지원내역 저장 - 실패 : 존재하지 않는 유저 아이디")
+	void saveJobApplicationHistoryFailureByUserId() {
+		// given
+		int jobId = 1;
+		int userId = 2;
+		when(jobRepository.findById(anyInt())).thenReturn(Optional.of(savedJob));
+		when(userRepository.findById(anyInt())).thenThrow(new UserNotFoundException(userId));
+
+		// when, then
+		assertThrows(UserNotFoundException.class, () -> {
+			JobApplicationHistory result = jobService.saveJobApplicationHistory(jobId, userId);
+		});
+	}
+
+
+	@Test
+	@DisplayName("ApplyJobResponseDto 생성 - 성공")
+	void createApplyJobResponseDto() {
+		// when
+		User user = new User(2, "test", "test");
+		JobApplicationHistory jobApplicationHistory = new JobApplicationHistory(1, savedJob, user, LocalDateTime.now());
+		ApplyJobResponseDto responseDto = jobService.createApplyJobResponseDto(jobApplicationHistory);
+
+		// then
+		assertNotNull(responseDto);
+		assertEquals(jobApplicationHistory.getId(), responseDto.getId());
+		assertEquals(savedJob.getId(), responseDto.getJobId());
+		assertEquals(user.getId(), responseDto.getUserId());
+		assertNotNull(responseDto.getCreatedAt());
 	}
 }

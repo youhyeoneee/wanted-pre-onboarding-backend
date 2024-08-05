@@ -2,7 +2,9 @@ package com.example.wanted_pre_onboarding_backend.global.error;
 
 
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobApplicationDuplicatedException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
         return error(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({CompanyNotFoundException.class, JobNotFoundException.class})
+    @ExceptionHandler({CompanyNotFoundException.class, JobNotFoundException.class, UserNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiUtils.ApiResult<String> handleBadRequestException(RuntimeException e) {
         String errorMessage = e.getMessage();
@@ -60,5 +62,12 @@ public class GlobalExceptionHandler {
     public ApiUtils.ApiResult<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         String errorMessage = e.getMessage();
         return error(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiUtils.ApiResult<String> handleJobApplicationDuplicatedException(JobApplicationDuplicatedException e) {
+        String errorMessage = e.getMessage();
+        return error(errorMessage, HttpStatus.CONFLICT);
     }
 }

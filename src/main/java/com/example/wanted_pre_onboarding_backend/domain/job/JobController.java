@@ -1,18 +1,23 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.*;
+
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobDetailResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobInfoResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobApplicationDuplicatedException;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistoryService;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import static com.example.wanted_pre_onboarding_backend.global.util.ApiUtils.success;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +30,7 @@ import java.util.stream.Collectors;
 public class JobController {
 
     private JobService jobService;
+    private JobApplicationHistoryService jobApplicationHistoryService;
 
     @GetMapping
     public ApiUtils.ApiResult getJobList(@RequestParam(value = "search", required = false) String searchKeyword) {
@@ -70,5 +76,21 @@ public class JobController {
     public ApiUtils.ApiResult<String> deleteJob(@PathVariable Integer jobId) {
         jobService.deleteJob(jobId);
         return success(jobId + "번 채용공고가 삭제되었습니다.");
+    }
+
+    @PostMapping("/apply")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiUtils.ApiResult applyJob(@Valid @RequestBody ApplyJobRequestDto applyJobRequestDto) {
+        int jobId = applyJobRequestDto.getJobId();
+        int userId = applyJobRequestDto.getUserId();
+
+        boolean isDuplicated = jobApplicationHistoryService.isDuplicatedApplication(jobId, userId);
+        if (isDuplicated) {
+            throw new JobApplicationDuplicatedException();
+        }  else {
+            JobApplicationHistory jobApplicationHistory = jobService.saveJobApplicationHistory(jobId, userId);
+            ApplyJobResponseDto applyJobResponseDto = jobService.createApplyJobResponseDto(jobApplicationHistory);
+            return success(applyJobResponseDto);
+        }
     }
 }
