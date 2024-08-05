@@ -281,4 +281,89 @@ class JobServiceTest {
 		// then
 		assertEquals(0, result.size());
 	}
+
+	@Test
+	@DisplayName("채용공고 목록 검색어로 필터링 - 성공 : 회사명")
+	void filterJobsBySearchKeywordSuccessCompanyName() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+		String searchKeyword = "원티드";
+
+		// when
+		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+
+		// then
+		assertEquals(1,  result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 검색어로 필터링 - 성공 : 국가")
+	void filterJobsBySearchKeywordSuccessNation() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+		String searchKeyword = "한국";
+
+		// when
+		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+
+		// then
+		assertEquals(2,  result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 검색어로 필터링 - 성공 : 지역")
+	void filterJobsBySearchKeywordSuccessArea() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+		String searchKeyword = "판교";
+
+		// when
+		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+
+		// then
+		assertEquals(1,  result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 검색어로 필터링 - 성공 : 포지션")
+	void filterJobsBySearchKeywordSuccessPosition() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+		String searchKeyword = "백엔드";
+
+		// when
+		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+
+		// then
+		assertEquals(1,  result.size());
+	}
+
+	@Test
+	@DisplayName("채용공고 목록 검색어로 필터링 - 성공 : 사용기술")
+	void filterJobsBySearchKeywordSuccessSkill() {
+		// given
+		List<Job> jobs = Arrays.asList(
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+		);
+		String searchKeyword = "Python";
+
+		// when
+		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+
+		// then
+		assertEquals(1,  result.size());
+	}
 }
