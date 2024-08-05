@@ -27,8 +27,14 @@ public class JobController {
     private JobService jobService;
 
     @GetMapping
-    public ApiUtils.ApiResult getJobList() {
+    public ApiUtils.ApiResult getJobList(@RequestParam(value = "search", required = false) String searchKeyword) {
         List<Job> jobs = jobService.findAllJob();
+
+        if (searchKeyword != null) {
+            log.info("search : " + searchKeyword);
+            jobs = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
+        }
+
         List<JobInfoResponseDto> jobInfoResponseDtos = jobs.stream()
             .map(JobInfoResponseDto::new)
             .collect(Collectors.toList());

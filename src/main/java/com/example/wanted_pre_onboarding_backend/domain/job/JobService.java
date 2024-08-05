@@ -1,6 +1,8 @@
 package com.example.wanted_pre_onboarding_backend.domain.job;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.CompanyRepository;
@@ -65,4 +67,16 @@ public class JobService {
         return jobs.stream().filter(j -> !j.equals(job))
             .map(Job::getId).toList();
     }
+
+    public List<Job> filterJobsBySearchKeyword(List<Job> jobs, String searchKeyword) {
+        return jobs.stream()
+            .filter(job -> {
+                Company company = job.getCompany();
+                return company.getCompanyName().contains(searchKeyword) ||
+                    company.getNation().contains(searchKeyword) ||
+                    company.getArea().contains(searchKeyword) ||
+                    job.getPosition().contains(searchKeyword) ||
+                    job.getSkill().contains(searchKeyword);
+            }).toList();
+	}
 }
