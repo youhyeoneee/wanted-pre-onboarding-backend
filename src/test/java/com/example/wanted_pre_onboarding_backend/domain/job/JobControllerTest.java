@@ -20,11 +20,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.Company;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.JobApplicationHistoryService;
+import com.example.wanted_pre_onboarding_backend.domain.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(JobController.class)
@@ -35,6 +41,9 @@ class JobControllerTest {
 
 	@MockBean
 	private JobService jobService;
+
+	@MockBean
+	private JobApplicationHistoryService jobApplicationHistoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -526,6 +535,101 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
 			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
 	}
+
+	@Test
+	@DisplayName("채용공고 지원 - 성공")
+	void applyJobSuccess() throws Exception {
+		// given
+		ApplyJobRequestDto requestDto = new ApplyJobRequestDto(2, 1);
+		when(jobApplicationHistoryService.isDuplicatedApplication(anyInt(), anyInt())).thenReturn(false);
+		User user = new User(2, "test", "Test");
+		JobApplicationHistory jobApplicationHistory = new JobApplicationHistory(1, savedJob, user, LocalDateTime.now());
+		ApplyJobResponseDto applyJobResponseDto = new ApplyJobResponseDto(jobApplicationHistory);
+		when(jobService.saveJobApplicationHistory(anyInt(), anyInt())).thenReturn(jobApplicationHistory);
+		when(jobService.createApplyJobResponseDto(any(JobApplicationHistory.class))).thenReturn(applyJobResponseDto);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs/apply")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(requestDto)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response.id").value(1))
+			.andExpect(jsonPath("$.response.userId").value(2))
+			.andExpect(jsonPath("$.response.jobId").value(1))
+			.andExpect(jsonPath("$.response.createdAt").isNotEmpty());
+	}
+
+	@Test
+	@DisplayName("채용공고 지원 - 실패 : 채용공고 아이디, 유저 아이디 필드에 0이하의 숫자 입력")
+	void applyJobFailureByInvalidField() throws Exception {
+		// given
+		ApplyJobRequestDto requestDto = new ApplyJobRequestDto(-1, -1);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs/apply")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(requestDto)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message.jobId").value("채용공고 아이디는 1이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.message.userId").value("유저 아이디는 1이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+	}
+
+	@Test
+	@DisplayName("채용공고 지원 - 실패 : 존재하지 않는 채용공고")
+	void applyJobFailureByJobId() throws Exception {
+		// given
+		int jobId = 2;
+		ApplyJobRequestDto requestDto = new ApplyJobRequestDto(1, jobId);
+		when(jobService.saveJobApplicationHistory(anyInt(), anyInt())).thenThrow(new JobNotFoundException(jobId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs/apply")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(requestDto)))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+	}
+
+	@Test
+	@DisplayName("채용공고 지원 - 실패 : 존재하지 않는 유저")
+	void applyJobFailureByUserId() throws Exception {
+		// given
+		int userId = 1;
+		ApplyJobRequestDto requestDto = new ApplyJobRequestDto(userId, 2);
+		when(jobService.saveJobApplicationHistory(anyInt(), anyInt())).thenThrow(new UserNotFoundException(userId));
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs/apply")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(requestDto)))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value(userId + "번 유저가 존재하지 않습니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+	}
+
+	@Test
+	@DisplayName("채용공고 지원 - 실패 : 이미 지원한 채용공고")
+	void applyJobFailureDuplicated() throws Exception {
+		// given
+		ApplyJobRequestDto requestDto = new ApplyJobRequestDto(1, 2);
+		when(jobApplicationHistoryService.isDuplicatedApplication(anyInt(), anyInt())).thenReturn(true);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs/apply")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(requestDto)))
+			.andExpect(status().isConflict())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.error.message").value("이미 지원한 채용공고입니다."))
+			.andExpect(jsonPath("$.error.httpStatus").value("CONFLICT"));
+	}
+
 
 }
 
