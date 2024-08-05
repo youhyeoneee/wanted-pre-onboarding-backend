@@ -345,7 +345,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 목록 조회 - 성공 : 2개 리스트")
-	void getJobListSuccess() throws Exception {
+	void getJobListSuccess2() throws Exception {
 		// given
 		Job job1 = new Job(new Company(1, "원티드랩", "한국", "서울"),
 			"백엔드 주니어 개발자", 1000000, "세부사항1", "Python");
@@ -378,12 +378,71 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 목록 조회 - 성공 : 빈 리스트")
-	void getJobListFailureNoData() throws Exception {
+	void getJobListSuccess0() throws Exception {
 		// given
 		when(jobService.findAllJob()).thenReturn(Collections.emptyList());
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response").isEmpty());
+	}
+
+	@Test
+	@DisplayName("채용공고 검색 : 성공 - 2개 리스트")
+	void searchJobSuccess2() throws Exception {
+		// given
+		String searchKeyword = "Django";
+		Job job2 = new Job(new Company(2, "네이버", "한국", "판교"),
+			"Django 백엔드 개발자", 1000000, "세부사항", "Django");
+		Job job4 = new Job(new Company(1, "카카오", "한국", "판교"),
+			"Django 백엔드 개발자", 500000, "세부사항", "Python");
+
+		setField(job2, "id", 2);
+		setField(job4, "id", 4);
+		List<Job> jobs = Arrays.asList(job2, job4);
+		when(jobService.findAllJob()).thenReturn(jobs);
+		when(jobService.filterJobsBySearchKeyword(jobs, searchKeyword)).thenReturn(jobs);
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs?search=" + searchKeyword))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success").value(true))
+			.andExpect(jsonPath("$.response[0].jobId").value(2))
+			.andExpect(jsonPath("$.response[0].companyName").value("네이버"))
+			.andExpect(jsonPath("$.response[0].nation").value("한국"))
+			.andExpect(jsonPath("$.response[0].area").value("판교"))
+			.andExpect(jsonPath("$.response[0].position").value("Django 백엔드 개발자"))
+			.andExpect(jsonPath("$.response[0].reward").value(1000000))
+			.andExpect(jsonPath("$.response[0].skill").value("Django"))
+			.andExpect(jsonPath("$.response[1].jobId").value(4))
+			.andExpect(jsonPath("$.response[1].companyName").value("카카오"))
+			.andExpect(jsonPath("$.response[1].nation").value("한국"))
+			.andExpect(jsonPath("$.response[1].area").value("판교"))
+			.andExpect(jsonPath("$.response[1].position").value("Django 백엔드 개발자"))
+			.andExpect(jsonPath("$.response[1].reward").value(500000))
+			.andExpect(jsonPath("$.response[1].skill").value("Python"));
+	}
+
+	@Test
+	@DisplayName("채용공고 검색 - 성공 : 빈 리스트")
+	void searchJobSuccess0() throws Exception {
+		// given
+		String searchKeyword = "원티드";
+		Job job2 = new Job(new Company(2, "네이버", "한국", "판교"),
+			"Django 백엔드 개발자", 1000000, "세부사항", "Django");
+		Job job4 = new Job(new Company(1, "카카오", "한국", "판교"),
+			"Django 백엔드 개발자", 500000, "세부사항", "Python");
+		setField(job2, "id", 2);
+		setField(job4, "id", 4);
+		List<Job> jobs = Arrays.asList(job2, job4);
+		when(jobService.findAllJob()).thenReturn(jobs);
+		when(jobService.filterJobsBySearchKeyword(jobs, searchKeyword)).thenReturn(Collections.emptyList());
+
+		// when, then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs?search=" + searchKeyword )
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
