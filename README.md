@@ -38,7 +38,9 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 <details>
 <summary><strong>구조 설명</strong></summary>
 <div markdown="1">
+<br>
 디렉터리 구조는 크게 domain과 global로 구분합니다. 
+  
 - domain : 서비스의 핵심 비즈니스 로직 코드가 도메인별로 구현되어 있습니다.
 - global : 핵심 비즈니스 로직에 종속적이지 않고 전역에서 사용할 수 있는 리스폰스 형식, 예외 처리 등을 관리합니다.
 
@@ -69,6 +71,7 @@ global은 domain이 공통으로 사용하는 error, util을 관리합니다.
 <details>
 <summary><strong>구조도</strong></summary>
 <div markdown="1">
+  
 ```
 src
 ├── main
@@ -149,6 +152,7 @@ src
                             └── service
                                 └── JobApplicationHistoryServiceTest.java
 ```
+
 </details>
 
 ## ERD
@@ -170,6 +174,7 @@ src
 <details>
 <summary><strong>1. 채용공고 등록</strong></summary>
 <div markdown="1">
+<br>
 
 회사는 아래 데이터와 같이 채용공고를 등록합니다.
 
@@ -244,6 +249,7 @@ POST /api/jobs
 <details>
 <summary><strong>2. 채용공고 수정</strong></summary>
 <div markdown="1">
+<br>
 
 회사는 아래 데이터와 같이 채용공고를 수정합니다.
 (회사 id 이외 모두 수정 가능합니다.)
@@ -328,6 +334,7 @@ or
 <details>
 <summary><strong>3. 채용공고 삭제</strong></summary>
 <div markdown="1">
+<br>
 
 DB에서 삭제됩니다.
 
@@ -365,6 +372,7 @@ DELETE /api/jobs/:jobId
 <details>
 <summary><strong>4. 채용공고 목록 조회</strong></summary>
 <div markdown="1">
+<br>
 
 사용자는 채용공고 목록을 아래와 같이 확인할 수 있습니다.
 
@@ -416,6 +424,7 @@ get /api/jobs
 <details>
 <summary><strong>5. 채용공고 검색</strong></summary>
 <div markdown="1">
+<br>
 
 사용자는 (회사명, 국가, 지역, 채용 포지션, 사용 기술에) 검색어가 포함된 채용공고 목록을 아래와 같이 확인할 수 있습니다.
 
@@ -476,6 +485,7 @@ get /api/jobs
 <details>
 <summary><strong>6. 채용공고 상세 조회</strong></summary>
 <div markdown="1">
+<br>
 
 사용자는 채용상세 페이지를 아래와 같이 확인할 수 있습니다.
 - “채용내용”이 추가적으로 담겨있음.
@@ -529,6 +539,7 @@ GET /api/jobs/:jobId
 <details>
 <summary><strong>7. 채용공고 지원</strong></summary>
 <div markdown="1">
+<br>
 
 사용자는 채용공고에 아래와 같이 지원합니다.
 사용자는 1회만 지원 가능합니다.
