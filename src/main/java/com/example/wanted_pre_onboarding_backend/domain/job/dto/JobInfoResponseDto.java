@@ -1,10 +1,13 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.dto;
 
 import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Getter;
 
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class JobInfoResponseDto {
 	int jobId;
 	String companyName;

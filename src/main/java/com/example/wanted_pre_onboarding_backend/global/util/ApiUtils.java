@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ApiUtils<T> {
     public static <T> ApiResult<T> success(T data) {
         return new ApiResult<T>(true, data, null);
@@ -27,6 +29,7 @@ public class ApiUtils<T> {
     @Getter
     static class ApiError<M> {
         M message;
+        @JsonProperty("http_status")
         HttpStatus httpStatus;
 
         ApiError(M message, HttpStatus httpStatus) {

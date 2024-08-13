@@ -6,6 +6,8 @@ import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobApplica
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
 import com.example.wanted_pre_onboarding_backend.global.util.ApiUtils;
+import com.example.wanted_pre_onboarding_backend.global.util.StringUtils;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -29,7 +31,7 @@ public class GlobalExceptionHandler {
     public ApiUtils.ApiResult<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException errors) {
         Map<String, String> errorMessages = new HashMap<>();
         for (FieldError error : errors.getFieldErrors()) {
-            String errorField = error.getField();
+            String errorField = StringUtils.toSnakeCase(error.getField());
             String errorMessage = error.getDefaultMessage();
             errorMessages.put(errorField, errorMessage);
         }

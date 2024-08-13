@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 
 import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ApplyJobResponseDto {
 	private int id;
 	private Integer jobId;

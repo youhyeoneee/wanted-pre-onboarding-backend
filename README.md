@@ -200,13 +200,13 @@ POST /api/jobs
   "success": true,
   "response": {
     "id": 1,
-    "companyId": 1,
+    "company_id": 1,
     "position": "백엔드 주니어 개발자",
     "reward": 1000000,
     "detail": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
     "skill": "Python",
-    "createdAt": "2024-07-31 11:27:16",
-    "updatedAt": "2024-07-31 11:27:16",
+    "created_at": "2024-07-31 11:27:16",
+    "updated_at": "2024-07-31 11:27:16",
   },
   "error": null
 }
@@ -222,7 +222,7 @@ POST /api/jobs
     "response" : null,
     "error": {
         "message": "회사가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -237,10 +237,10 @@ POST /api/jobs
   "error": {
     "message": {
       "reward": "보상금은 0이상의 숫자여야 합니다.",
-      "companyId": "회사 아이디는 필수 요소입니다." or "회사 아이디는 1이상의 숫자여야 합니다.",
+      "company_id": "회사 아이디는 필수 요소입니다." or "회사 아이디는 1이상의 숫자여야 합니다.",
       "position": "포지션은 필수 요소입니다."
     },
-    "httpStatus": "BAD_REQUEST"
+    "http_status": "BAD_REQUEST"
   }
 }
 ```
@@ -286,13 +286,13 @@ or
     "success": true,
     "response": {
         "id": 1,
-        "companyId": 1,
+        "company_id": 1,
         "position": "백엔드 주니어 개발자",
         "reward": 1500000,
         "detail": "원티드랩에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은..",
         "skill": "Python",
-        "createdAt": "2024-07-31 13:04:01",
-        "updatedAt": "2024-07-31 19:05:36",
+        "created_at": "2024-07-31 13:04:01",
+        "updated_at": "2024-07-31 19:05:36",
     },
     "error": null
 }
@@ -308,7 +308,7 @@ or
     "response": null,
     "error": {
         "message": "0번 채용공고가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -324,7 +324,7 @@ or
       "reward": "보상금은 0이상의 숫자여야 합니다.",
       "position": "포지션은 필수 요소입니다."
     },
-    "httpStatus": "BAD_REQUEST"
+    "http_status": "BAD_REQUEST"
   }
 }
 ```
@@ -362,7 +362,7 @@ DELETE /api/jobs/:jobId
     "response": null,
     "error": {
         "message": "0번 채용공고가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -388,8 +388,8 @@ get /api/jobs
     "success": true,
     "response": [
         {
-            "jobId": 1,
-            "companyName": "원티드",
+            "job_id": 1,
+            "company_name": "원티드",
             "nation": "한국",
             "area": "서울",
             "position": "백엔드 주니어 개발자",
@@ -397,8 +397,8 @@ get /api/jobs
             "skill": "Python"
         },
         {
-            "jobId": 2,
-            "companyName": "네이버",
+            "job_id": 2,
+            "company_name": "네이버",
             "nation": "한국",
             "area": "판교",
             "position": "Django 백엔드 개발자",
@@ -440,8 +440,8 @@ get /api/jobs
   "success": true,
   "response": [
     {
-      "jobId": 11,
-      "companyName": "네이버",
+      "job_id": 11,
+      "company_name": "네이버",
       "nation": "한국",
       "area": "판교",
       "position": "Django 백엔드 개발자",
@@ -449,8 +449,8 @@ get /api/jobs
       "skill": "Python"
     },
     {
-      "jobId": 12,
-      "companyName": "원티드",
+      "job_id": 12,
+      "company_name": "원티드",
       "nation": "한국",
       "area": "서울",
       "position": "Python 백엔드 개발자",
@@ -458,8 +458,8 @@ get /api/jobs
       "skill": "Django"
     },
     {
-      "jobId": 17,
-      "companyName": "구글",
+      "job_id": 17,
+      "company_name": "구글",
       "nation": "미국",
       "area": "뉴욕",
       "position": "Django 백엔드 개발자",
@@ -502,15 +502,15 @@ GET /api/jobs/:jobId
 {
   "success": true,
   "response": {
-    "jobId": 10,
-    "companyName": "원티드",
+    "job_id": 10,
+    "company_name": "원티드",
     "nation": "한국",
     "area": "서울",
     "position": "백엔드 주니어 개발자",
     "reward": 1500000,
     "detail": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
     "skill": "Python",
-    "otherJobIds": [
+    "other_job_ids": [
       12,
       13,
       14
@@ -529,7 +529,7 @@ GET /api/jobs/:jobId
     "response": null,
     "error": {
         "message": "0번 채용공고가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -564,9 +564,9 @@ POST /api/jobs/apply
   "success": true,
   "response": {
     "id": 2,
-    "jobId": 1,
-    "userId": 2,
-    "createdAt": "2024-08-05 14:54:22"
+    "job_id": 1,
+    "user_id": 2,
+    "created_at": "2024-08-05 14:54:22"
   },
   "error": null
 }
@@ -582,10 +582,10 @@ POST /api/jobs/apply
     "response": null,
     "error": {
         "message": {
-            "jobId": "채용공고 아이디는 1이상의 숫자여야 합니다.",
-            "userId": "유저 아이디는 1이상의 숫자여야 합니다."
+            "job_id": "채용공고 아이디는 1이상의 숫자여야 합니다.",
+            "user_id": "유저 아이디는 1이상의 숫자여야 합니다."
         },
-        "httpStatus": "BAD_REQUEST"
+        "http_status": "BAD_REQUEST"
     }
 }
 ```
@@ -598,7 +598,7 @@ POST /api/jobs/apply
     "response": null,
     "error": {
         "message": "1번 채용공고가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -611,7 +611,7 @@ POST /api/jobs/apply
     "response": null,
     "error": {
         "message": "2번 유저가 존재하지 않습니다.",
-        "httpStatus": "NOT_FOUND"
+        "http_status": "NOT_FOUND"
     }
 }
 ```
@@ -624,7 +624,7 @@ POST /api/jobs/apply
     "response": null,
     "error": {
         "message": "이미 지원한 채용공고 입니다.",
-        "httpStatus": "CONFILCT"
+        "http_status": "CONFILCT"
     }
 }
 ```

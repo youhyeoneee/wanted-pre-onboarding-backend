@@ -99,13 +99,13 @@ class JobControllerTest {
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.success").value(true))
 			.andExpect(jsonPath("$.response.id").value(1))
-			.andExpect(jsonPath("$.response.companyId").value(registerJobRequestDto.getCompanyId()))
+			.andExpect(jsonPath("$.response.company_id").value(registerJobRequestDto.getCompanyId()))
 			.andExpect(jsonPath("$.response.position").value(registerJobRequestDto.getPosition()))
 			.andExpect(jsonPath("$.response.reward").value(registerJobRequestDto.getReward()))
 			.andExpect(jsonPath("$.response.detail").value(registerJobRequestDto.getDetail()))
 			.andExpect(jsonPath("$.response.skill").value(registerJobRequestDto.getSkill()))
-            .andExpect(jsonPath("$.response.createdAt").isNotEmpty())
-			.andExpect(jsonPath("$.response.updatedAt").isNotEmpty());
+            .andExpect(jsonPath("$.response.created_at").isNotEmpty())
+			.andExpect(jsonPath("$.response.updated_at").isNotEmpty());
 	}
 
 	@Test
@@ -121,7 +121,7 @@ class JobControllerTest {
 				.content(invalidJson))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ class JobControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message.reward").value("보상금은 0이상의 숫자여야 합니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -166,8 +166,8 @@ class JobControllerTest {
 				.content(objectMapper.writeValueAsString(registerJobRequestDto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.message.companyId").value("회사 아이디는 1이상의 숫자여야 합니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.message.company_id").value("회사 아이디는 1이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -183,8 +183,8 @@ class JobControllerTest {
 				.content(invalidJson))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.message.companyId").value("회사 아이디는 필수 요소입니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.message.company_id").value("회사 아이디는 필수 요소입니다."))
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -200,7 +200,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value("회사가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -216,7 +216,7 @@ class JobControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message.position").value("포지션은 필수 요소입니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -258,7 +258,7 @@ class JobControllerTest {
 				.content(objectMapper.writeValueAsString(updateJobRequestDto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -275,7 +275,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -291,7 +291,7 @@ class JobControllerTest {
 				.content(invalidJson))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -307,7 +307,7 @@ class JobControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message.reward").value("보상금은 0이상의 숫자여야 합니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -323,7 +323,7 @@ class JobControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message.position").value("포지션은 필수 요소입니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -352,7 +352,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -372,15 +372,15 @@ class JobControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response[0].jobId").value(1))
-			.andExpect(jsonPath("$.response[0].companyName").value("원티드랩"))
+			.andExpect(jsonPath("$.response[0].job_id").value(1))
+			.andExpect(jsonPath("$.response[0].company_name").value("원티드랩"))
 			.andExpect(jsonPath("$.response[0].nation").value("한국"))
 			.andExpect(jsonPath("$.response[0].area").value("서울"))
 			.andExpect(jsonPath("$.response[0].position").value("백엔드 주니어 개발자"))
 			.andExpect(jsonPath("$.response[0].reward").value(1000000))
 			.andExpect(jsonPath("$.response[0].skill").value("Python"))
-			.andExpect(jsonPath("$.response[1].jobId").value(2))
-			.andExpect(jsonPath("$.response[1].companyName").value("네이버"))
+			.andExpect(jsonPath("$.response[1].job_id").value(2))
+			.andExpect(jsonPath("$.response[1].company_name").value("네이버"))
 			.andExpect(jsonPath("$.response[1].nation").value("한국"))
 			.andExpect(jsonPath("$.response[1].area").value("판교"))
 			.andExpect(jsonPath("$.response[1].position").value("프론트엔드 주니어 개발자"))
@@ -422,15 +422,15 @@ class JobControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs?search=" + searchKeyword))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response[0].jobId").value(2))
-			.andExpect(jsonPath("$.response[0].companyName").value("네이버"))
+			.andExpect(jsonPath("$.response[0].job_id").value(2))
+			.andExpect(jsonPath("$.response[0].company_name").value("네이버"))
 			.andExpect(jsonPath("$.response[0].nation").value("한국"))
 			.andExpect(jsonPath("$.response[0].area").value("판교"))
 			.andExpect(jsonPath("$.response[0].position").value("Django 백엔드 개발자"))
 			.andExpect(jsonPath("$.response[0].reward").value(1000000))
 			.andExpect(jsonPath("$.response[0].skill").value("Django"))
-			.andExpect(jsonPath("$.response[1].jobId").value(4))
-			.andExpect(jsonPath("$.response[1].companyName").value("카카오"))
+			.andExpect(jsonPath("$.response[1].job_id").value(4))
+			.andExpect(jsonPath("$.response[1].company_name").value("카카오"))
 			.andExpect(jsonPath("$.response[1].nation").value("한국"))
 			.andExpect(jsonPath("$.response[1].area").value("판교"))
 			.andExpect(jsonPath("$.response[1].position").value("Django 백엔드 개발자"))
@@ -483,16 +483,16 @@ class JobControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response.jobId").value(1))
-			.andExpect(jsonPath("$.response.companyName").value("원티드"))
+			.andExpect(jsonPath("$.response.job_id").value(1))
+			.andExpect(jsonPath("$.response.company_name").value("원티드"))
 			.andExpect(jsonPath("$.response.nation").value("한국"))
 			.andExpect(jsonPath("$.response.area").value("서울"))
 			.andExpect(jsonPath("$.response.position").value("백엔드 주니어 개발자"))
 			.andExpect(jsonPath("$.response.reward").value(1000000))
 			.andExpect(jsonPath("$.response.skill").value("Python"))
 			.andExpect(jsonPath("$.response.detail").value("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은.."))
-			.andExpect(jsonPath("$.response.otherJobIds[0]").value(2))
-			.andExpect(jsonPath("$.response.otherJobIds[1]").value(3));
+			.andExpect(jsonPath("$.response.other_job_ids[0]").value(2))
+			.andExpect(jsonPath("$.response.other_job_ids[1]").value(3));
 	}
 
 	@Test
@@ -513,15 +513,15 @@ class JobControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
-			.andExpect(jsonPath("$.response.jobId").value(jobId))
-			.andExpect(jsonPath("$.response.companyName").value("구글"))
+			.andExpect(jsonPath("$.response.job_id").value(jobId))
+			.andExpect(jsonPath("$.response.company_name").value("구글"))
 			.andExpect(jsonPath("$.response.nation").value("미국"))
 			.andExpect(jsonPath("$.response.area").value("뉴욕"))
 			.andExpect(jsonPath("$.response.position").value("백엔드 주니어 개발자"))
 			.andExpect(jsonPath("$.response.reward").value(1000000))
 			.andExpect(jsonPath("$.response.skill").value("Django"))
 			.andExpect(jsonPath("$.response.detail").value("구글에서 백엔드 주니어 개발자를 '적극' 채용합니다. 자격요건은.."))
-			.andExpect(jsonPath("$.response.otherJobIds").isEmpty());
+			.andExpect(jsonPath("$.response.other_job_ids").isEmpty());
 	}
 
 	@Test
@@ -536,7 +536,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -558,9 +558,9 @@ class JobControllerTest {
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.success").value(true))
 			.andExpect(jsonPath("$.response.id").value(1))
-			.andExpect(jsonPath("$.response.userId").value(2))
-			.andExpect(jsonPath("$.response.jobId").value(1))
-			.andExpect(jsonPath("$.response.createdAt").isNotEmpty());
+			.andExpect(jsonPath("$.response.user_id").value(2))
+			.andExpect(jsonPath("$.response.job_id").value(1))
+			.andExpect(jsonPath("$.response.created_at").isNotEmpty());
 	}
 
 	@Test
@@ -575,9 +575,9 @@ class JobControllerTest {
 				.content(objectMapper.writeValueAsString(requestDto)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.success").value(false))
-			.andExpect(jsonPath("$.error.message.jobId").value("채용공고 아이디는 1이상의 숫자여야 합니다."))
-			.andExpect(jsonPath("$.error.message.userId").value("유저 아이디는 1이상의 숫자여야 합니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("BAD_REQUEST"));
+			.andExpect(jsonPath("$.error.message.job_id").value("채용공고 아이디는 1이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.message.user_id").value("유저 아이디는 1이상의 숫자여야 합니다."))
+			.andExpect(jsonPath("$.error.http_status").value("BAD_REQUEST"));
 	}
 
 	@Test
@@ -595,7 +595,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value(jobId + "번 채용공고가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -613,7 +613,7 @@ class JobControllerTest {
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value(userId + "번 유저가 존재하지 않습니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("NOT_FOUND"));
+			.andExpect(jsonPath("$.error.http_status").value("NOT_FOUND"));
 	}
 
 	@Test
@@ -630,7 +630,7 @@ class JobControllerTest {
 			.andExpect(status().isConflict())
 			.andExpect(jsonPath("$.success").value(false))
 			.andExpect(jsonPath("$.error.message").value("이미 지원한 채용공고입니다."))
-			.andExpect(jsonPath("$.error.httpStatus").value("CONFLICT"));
+			.andExpect(jsonPath("$.error.http_status").value("CONFLICT"));
 	}
 
 
