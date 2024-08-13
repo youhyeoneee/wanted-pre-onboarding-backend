@@ -40,40 +40,40 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ApiUtils.ApiResult<String> handleSQLException(
-		SQLIntegrityConstraintViolationException e) {
-		String errorMessage = e.getMessage();
+	public ApiUtils.ApiResult<String> handleSqlException(
+		SQLIntegrityConstraintViolationException exception) {
+		String errorMessage = exception.getMessage();
 		return error(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiUtils.ApiResult<String> handleHttpException(HttpMessageNotReadableException e) {
-		String errorMessage = "잘못된 입력 형식입니다 : " + e.getLocalizedMessage();
+	public ApiUtils.ApiResult<String> handleHttpException(HttpMessageNotReadableException exception) {
+		String errorMessage = "잘못된 입력 형식입니다 : " + exception.getLocalizedMessage();
 		return error(errorMessage, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler({CompanyNotFoundException.class, JobNotFoundException.class,
 		UserNotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ApiUtils.ApiResult<String> handleBadRequestException(RuntimeException e) {
-		String errorMessage = e.getMessage();
+	public ApiUtils.ApiResult<String> handleBadRequestException(RuntimeException exception) {
+		String errorMessage = exception.getMessage();
 		return error(errorMessage, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiUtils.ApiResult<String> handleMethodArgumentTypeMismatchException(
-		MethodArgumentTypeMismatchException e) {
-		String errorMessage = e.getMessage();
+		MethodArgumentTypeMismatchException exception) {
+		String errorMessage = exception.getMessage();
 		return error(errorMessage, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ApiUtils.ApiResult<String> handleJobApplicationDuplicatedException(
-		JobApplicationDuplicatedException e) {
-		String errorMessage = e.getMessage();
+		JobApplicationDuplicatedException exception) {
+		String errorMessage = exception.getMessage();
 		return error(errorMessage, HttpStatus.CONFLICT);
 	}
 }
