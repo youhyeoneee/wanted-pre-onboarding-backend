@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ApplyJobResponseDto {
+
 	private int id;
 	private Integer jobId;
 	private Integer userId;

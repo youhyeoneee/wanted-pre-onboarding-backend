@@ -1,6 +1,7 @@
 package com.example.wanted_pre_onboarding_backend.domain.job.exception;
 
 public class UserNotFoundException extends RuntimeException {
+
 	private String message;
 
 	public UserNotFoundException(int userId) {

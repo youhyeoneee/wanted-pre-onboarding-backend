@@ -1,6 +1,5 @@
 package com.example.wanted_pre_onboarding_backend.domain.user.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,8 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class User {
-    @Id
-    private int id;
-    private String username;
-    private String pw;
+
+	@Id
+	private int id;
+	private String username;
+	private String pw;
 }

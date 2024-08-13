@@ -1,40 +1,43 @@
 package com.example.wanted_pre_onboarding_backend.global.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 public class ApiUtils<T> {
-    public static <T> ApiResult<T> success(T data) {
-        return new ApiResult<T>(true, data, null);
-    }
 
-    public static <M> ApiResult<M> error(M message, HttpStatus httpStatus) {
-        return new ApiResult(false,
-                null,
-                new ApiError(message, httpStatus));
-    }
+	public static <T> ApiResult<T> success(T data) {
+		return new ApiResult<T>(true, data, null);
+	}
 
-    @Getter
-    @AllArgsConstructor
-    public static class ApiResult<T> {
+	public static <M> ApiResult<M> error(M message, HttpStatus httpStatus) {
+		return new ApiResult(false,
+			null,
+			new ApiError(message, httpStatus));
+	}
 
-        boolean success;
-        T response;
-        ApiError error;
-    }
+	@Getter
+	@AllArgsConstructor
+	public static class ApiResult<T> {
 
-    @Getter
-    static class ApiError<M> {
-        M message;
-        @JsonProperty("http_status")
-        HttpStatus httpStatus;
+		boolean success;
+		T response;
+		ApiError error;
+	}
 
-        ApiError(M message, HttpStatus httpStatus) {
-            this.message = message;
-            this.httpStatus = httpStatus;
-        }
-    }
+	@Getter
+	static class ApiError<M> {
+
+		M message;
+		@JsonProperty("http_status")
+		HttpStatus httpStatus;
+
+		ApiError(M message, HttpStatus httpStatus) {
+			this.message = message;
+			this.httpStatus = httpStatus;
+		}
+	}
 }

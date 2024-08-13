@@ -7,16 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Table(name = "companys")
 public class Company {
-    @Id
-    private int id;
-    private String companyName;
-    private String nation;
-    private String area;
+	@Id
+	private int id;
+	private String companyName;
+	private String nation;
+	private String area;
 }

@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
 import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.service.JobApplicationHistoryService;
 
 @ExtendWith(MockitoExtension.class)
 class JobApplicationHistoryServiceTest {
@@ -42,7 +41,8 @@ class JobApplicationHistoryServiceTest {
 	void isDuplicatedApplicationTrue() {
 		// given
 		JobApplicationHistory jobApplicationHistory = new JobApplicationHistory();
-		when(jobApplicaionHistoryRepository.findByJobIdAndUserId(anyInt(), anyInt())).thenReturn(Optional.of(jobApplicationHistory));
+		when(jobApplicaionHistoryRepository.findByJobIdAndUserId(anyInt(), anyInt())).thenReturn(
+			Optional.of(jobApplicationHistory));
 
 		// when
 		boolean result = jobApplicationHistoryService.isDuplicatedApplication(1, 1);

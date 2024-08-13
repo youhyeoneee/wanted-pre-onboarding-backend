@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateJobRequestDto {
+
 	@NotBlank(message = "포지션은 필수 요소입니다.")
 	private String position;
 

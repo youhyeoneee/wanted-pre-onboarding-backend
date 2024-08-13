@@ -20,17 +20,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
 import com.example.wanted_pre_onboarding_backend.domain.company.repository.CompanyRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.JobNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.UserNotFoundException;
 import com.example.wanted_pre_onboarding_backend.domain.job.repository.JobRepository;
-import com.example.wanted_pre_onboarding_backend.domain.job.service.JobService;
-import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
 import com.example.wanted_pre_onboarding_backend.domain.job_application_history.entity.JobApplicationHistory;
+import com.example.wanted_pre_onboarding_backend.domain.job_application_history.repository.JobApplicaionHistoryRepository;
 import com.example.wanted_pre_onboarding_backend.domain.user.entity.User;
 import com.example.wanted_pre_onboarding_backend.domain.user.repository.UserRepository;
 
@@ -159,7 +158,6 @@ class JobServiceTest {
 		});
 	}
 
-
 	@Test
 	@DisplayName("채용공고 삭제 - 성공")
 	void deleteJobSuccess() {
@@ -194,8 +192,10 @@ class JobServiceTest {
 	void findAllJobSuccess() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 
 		when(jobRepository.findAll()).thenReturn(jobs);
@@ -221,7 +221,6 @@ class JobServiceTest {
 		assertNotNull(job);
 		assertEquals(1, job.getId());
 	}
-
 
 	@Test
 	@DisplayName("채용공고 아이디로 조회 - 실패")
@@ -299,8 +298,10 @@ class JobServiceTest {
 	void filterJobsBySearchKeywordSuccessCompanyName() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 		String searchKeyword = "원티드";
 
@@ -308,7 +309,7 @@ class JobServiceTest {
 		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
 
 		// then
-		assertEquals(1,  result.size());
+		assertEquals(1, result.size());
 	}
 
 	@Test
@@ -316,8 +317,10 @@ class JobServiceTest {
 	void filterJobsBySearchKeywordSuccessNation() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 		String searchKeyword = "한국";
 
@@ -325,7 +328,7 @@ class JobServiceTest {
 		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
 
 		// then
-		assertEquals(2,  result.size());
+		assertEquals(2, result.size());
 	}
 
 	@Test
@@ -333,8 +336,10 @@ class JobServiceTest {
 	void filterJobsBySearchKeywordSuccessArea() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 		String searchKeyword = "판교";
 
@@ -342,7 +347,7 @@ class JobServiceTest {
 		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
 
 		// then
-		assertEquals(1,  result.size());
+		assertEquals(1, result.size());
 	}
 
 	@Test
@@ -350,8 +355,10 @@ class JobServiceTest {
 	void filterJobsBySearchKeywordSuccessPosition() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 		String searchKeyword = "백엔드";
 
@@ -359,7 +366,7 @@ class JobServiceTest {
 		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
 
 		// then
-		assertEquals(1,  result.size());
+		assertEquals(1, result.size());
 	}
 
 	@Test
@@ -367,8 +374,10 @@ class JobServiceTest {
 	void filterJobsBySearchKeywordSuccessSkill() {
 		// given
 		List<Job> jobs = Arrays.asList(
-			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", "Python"),
-			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..", "JavaScript")
+			new Job(new Company(1, "원티드랩", "한국", "서울"), "백엔드 주니어 개발자", 1000000, "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"Python"),
+			new Job(new Company(2, "네이버", "한국", "판교"), "프론트엔드 주니어 개발자", 1200000, "네이버에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+				"JavaScript")
 		);
 		String searchKeyword = "Python";
 
@@ -376,7 +385,7 @@ class JobServiceTest {
 		List<Job> result = jobService.filterJobsBySearchKeyword(jobs, searchKeyword);
 
 		// then
-		assertEquals(1,  result.size());
+		assertEquals(1, result.size());
 	}
 
 	@Test
@@ -429,7 +438,6 @@ class JobServiceTest {
 			JobApplicationHistory result = jobService.saveJobApplicationHistory(jobId, userId);
 		});
 	}
-
 
 	@Test
 	@DisplayName("ApplyJobResponseDto 생성 - 성공")

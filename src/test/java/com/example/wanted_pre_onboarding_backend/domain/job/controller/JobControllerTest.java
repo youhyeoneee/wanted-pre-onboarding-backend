@@ -20,11 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.wanted_pre_onboarding_backend.domain.company.entity.Company;
-import com.example.wanted_pre_onboarding_backend.domain.job.controller.JobController;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.ApplyJobResponseDto;
-import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.JobResponseDto;
+import com.example.wanted_pre_onboarding_backend.domain.job.dto.RegisterJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.dto.UpdateJobRequestDto;
 import com.example.wanted_pre_onboarding_backend.domain.job.entity.Job;
 import com.example.wanted_pre_onboarding_backend.domain.job.exception.CompanyNotFoundException;
@@ -56,6 +55,7 @@ class JobControllerTest {
 	private UpdateJobRequestDto updateJobRequestDto;
 	private Job savedJob;
 	private Company company;
+
 	@BeforeEach
 	void setUp() {
 
@@ -75,7 +75,6 @@ class JobControllerTest {
 		setField(savedJob, "createdAt", LocalDateTime.now());
 		setField(savedJob, "updatedAt", LocalDateTime.now());
 		jobResponseDto = new JobResponseDto(savedJob);
-
 
 		updateJobRequestDto = new UpdateJobRequestDto(
 			"백엔드 주니어 개발자",
@@ -104,7 +103,7 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.response.reward").value(registerJobRequestDto.getReward()))
 			.andExpect(jsonPath("$.response.detail").value(registerJobRequestDto.getDetail()))
 			.andExpect(jsonPath("$.response.skill").value(registerJobRequestDto.getSkill()))
-            .andExpect(jsonPath("$.response.created_at").isNotEmpty())
+			.andExpect(jsonPath("$.response.created_at").isNotEmpty())
 			.andExpect(jsonPath("$.response.updated_at").isNotEmpty());
 	}
 
@@ -144,8 +143,9 @@ class JobControllerTest {
 	@DisplayName("채용공고 등록 - 실패 : 회사 아이디 필드에 문자 입력")
 	void registerJobFailureByCompanyId1() throws Exception {
 		// given
-		String invalidJson = "{ \"companyId\": \"abc\", \"position\": \"백엔드 주니어 개발자\", \"reward\": 1000000, \"detail\": "
-			+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
+		String invalidJson =
+			"{ \"companyId\": \"abc\", \"position\": \"백엔드 주니어 개발자\", \"reward\": 1000000, \"detail\": "
+				+ "\"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..\", \"skill\": \"Python\" }";
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/jobs")
@@ -266,7 +266,8 @@ class JobControllerTest {
 	void updateJobFailureByJobId2() throws Exception {
 		// given
 		int jobId = 0;
-		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(new JobNotFoundException(jobId));
+		when(jobService.updateJob(eq(jobId), any(UpdateJobRequestDto.class))).thenThrow(
+			new JobNotFoundException(jobId));
 
 		// when, then
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/jobs/" + jobId)
@@ -454,7 +455,7 @@ class JobControllerTest {
 		when(jobService.filterJobsBySearchKeyword(jobs, searchKeyword)).thenReturn(Collections.emptyList());
 
 		// when, then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs?search=" + searchKeyword )
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/jobs?search=" + searchKeyword)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.success").value(true))
@@ -526,7 +527,7 @@ class JobControllerTest {
 
 	@Test
 	@DisplayName("채용공고 상세 조회 - 실패 : 존재하지 않는 채용공고 아이디")
-	void getJobDetailFailure() throws Exception{
+	void getJobDetailFailure() throws Exception {
 		// given
 		int jobId = 0;
 		doThrow(new JobNotFoundException(jobId)).when(jobService).findJobById(eq(jobId));
@@ -632,7 +633,6 @@ class JobControllerTest {
 			.andExpect(jsonPath("$.error.message").value("이미 지원한 채용공고입니다."))
 			.andExpect(jsonPath("$.error.http_status").value("CONFLICT"));
 	}
-
 
 }
 

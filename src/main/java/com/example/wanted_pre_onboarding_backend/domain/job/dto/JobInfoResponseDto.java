@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class JobInfoResponseDto {
+
 	int jobId;
 	String companyName;
 	String nation;
