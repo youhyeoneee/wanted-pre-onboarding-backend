@@ -101,13 +101,12 @@ public class JobController {
 		boolean isDuplicated = jobApplicationHistoryService.isDuplicatedApplication(jobId, userId);
 		if (isDuplicated) {
 			throw new JobApplicationDuplicatedException();
-		} else {
-			JobApplicationHistory jobApplicationHistory = jobService.saveJobApplicationHistory(
-				jobId,
-				userId);
-			ApplyJobResponseDto applyJobResponseDto = jobService.createApplyJobResponseDto(
-				jobApplicationHistory);
-			return success(applyJobResponseDto);
 		}
+		JobApplicationHistory jobApplicationHistory = jobService.saveJobApplicationHistory(
+			jobId,
+			userId);
+		ApplyJobResponseDto applyJobResponseDto = jobService.createApplyJobResponseDto(
+			jobApplicationHistory);
+		return success(applyJobResponseDto);
 	}
 }
