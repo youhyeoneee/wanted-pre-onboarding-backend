@@ -80,11 +80,11 @@ public class JobService {
 		return jobs.stream()
 			.filter(job -> {
 				Company company = job.getCompany();
-				return company.getCompanyName().contains(searchKeyword) ||
-					company.getNation().contains(searchKeyword) ||
-					company.getArea().contains(searchKeyword) ||
-					job.getPosition().contains(searchKeyword) ||
-					job.getSkill().contains(searchKeyword);
+				return company.getCompanyName().contains(searchKeyword)
+					|| company.getNation().contains(searchKeyword)
+					|| company.getArea().contains(searchKeyword)
+					|| job.getPosition().contains(searchKeyword)
+					|| job.getSkill().contains(searchKeyword);
 			}).toList();
 	}
 
