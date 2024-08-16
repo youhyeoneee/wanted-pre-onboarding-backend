@@ -31,7 +31,7 @@ spring.datasource.username=
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
-2. WantedPreOnboardingBackendApplication 실행
+2. WantedApplication 실행
 
 ## 디렉터리 구조
 
@@ -78,8 +78,8 @@ src
 │   ├── java
 │   │   └── com
 │   │       └── example
-│   │           └── wanted_pre_onboarding_backend
-│   │               ├── WantedPreOnboardingBackendApplication.java
+│   │           └── wanted
+│   │               ├── WantedApplication.java
 │   │               ├── domain
 │   │               │   ├── company
 │   │               │   │   ├── entity
@@ -133,8 +133,8 @@ src
     └── java
         └── com
             └── example
-                └── wanted_pre_onboarding_backend
-                    ├── WantedPreOnboardingBackendApplicationTests.java
+                └── wanted
+                    ├── WantedApplicationTests.java
                     └── domain
                         ├── company
                         │   └── repository
